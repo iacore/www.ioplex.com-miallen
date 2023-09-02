@@ -1,0 +1,54 @@
+library
+  title
+  desc
+  interface
+	comments
+  	manpage
+    include
+    title
+    desc
+    group
+      title
+      desc
+      code
+        title
+        pre
+        desc
+      meth
+        pre
+        param
+        desc
+        ret
+desc
+  def      italic
+  ident    monospaced text
+  pre      no formatting
+  example
+  table
+  tablenum
+  examplenum
+ret
+  def      italic
+  ident    monospaced text
+  pre      no formatting
+  table
+  tablenum
+  examplenum
+th|td
+  def      italic
+  ident    monospaced text
+  tablenum
+  examplenum
+table
+  title
+  tr
+    th
+    td
+example
+  title
+  desc
+title
+  def
+  ident
+title|desc|ret|def|ident|pre|th|td
+  #text

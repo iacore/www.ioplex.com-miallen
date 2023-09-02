@@ -1,0 +1,241 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<STYLE TYPE="text/css">
+		BODY {
+			background-color: f5f5f5;
+			font-family: verdana, arial; font-size: small;
+		}
+		H2, H3, A, .tfc {
+			color: #000080;
+			font-family: verdana, arial; font-size: small;
+		}
+		PRE { 
+		    font-family: monospace;
+		    border: 1px solid black;
+		    white-space: pre; 
+		    color: black;
+		    background-color: #dfdfdf; 
+		}
+		TABLE {
+			float: right;
+			border-collapse: collapse;
+			border-top: 1px solid #000000;
+			border-right: 1px solid #000000;
+			border-left: 1px solid #000000;
+		}
+		TH {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+		}
+		TD {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+			border-bottom: 1px solid #000000;
+			border-right: 1px solid #000000;
+		}
+	</STYLE>
+<TITLE>DOM_Element</TITLE>
+</HEAD>
+<BODY>
+<H2>4. DOM_Element</H2>
+The <tt>DOM_Element</tt> interface represents an element in an XML document. The following is a description of each <tt>DOM_Node</tt> member in the context of a <tt>DOM_Element</tt>:
+
+<ul>
+<li>
+<tt>nodeName</tt> This <tt>DOM_String *</tt> corresponds to the tag name of the element. It is read-only and cannot be modified.</li>
+<li>
+<tt>nodeValue</tt> This is always <tt>NULL</tt>
+</li>
+<li>
+<tt>childNodes</tt> This <tt>DOM_NodeList *</tt> contains the child nodes of this element.</li>
+<li>
+<tt>attributes</tt> This <tt>DOM_NamedNodeMap *</tt> contains the <tt>DOM_Attr</tt> attribute nodes of this element.</li>
+<li>
+<tt>firstChild</tt> This <tt>DOM_Node *</tt> points to the first child of this element or <tt>NULL</tt> if the element currently has no children.</li>
+<li>
+<tt>lastChild</tt> This <tt>DOM_Node *</tt> points to the last child of this element or <tt>NULL</tt> if the element currently has no children.</li>
+<li>
+<tt>previousSibling</tt> This <tt>DOM_Node *</tt> points to the previous node in the <tt>childNodes</tt> list of the parent element of this element.</li>
+<li>
+<tt>nextSibling</tt> This <tt>DOM_Node *</tt> points to the next node in the <tt>childNodes</tt> list of the parent element of this element.</li>
+</ul>
+
+<P>
+<B CLASS="tfc">Example 1. Enumerating the children of an Element using sibling pointers</B>
+<BR>
+This example illustrates how to enumerate each child node of a <tt>DOM_Element</tt> node. This is a more efficient method of enumerating children than indexing each with the <tt>DOM_NodeList(elem-&gt;childNodes, idx)</tt> technique.
+<PRE>
+
+  for (child = elem-&gt;firstChild; child; child = child-&gt;nextSibling) {
+  	if (child-&gt;nodeType == DOM_COMMENT_NODE) {
+  		printf("comment: %s\n", child-&gt;nodeValue);
+  	}
+  }
+  </PRE>
+</P>
+
+In addition to the functions provided by the <tt>DOM_Node</tt> interface this interface provides additional functions mainly for manipulating attributes.
+<p>
+</p>
+<i>The DOM specifications require support for entity references which may result in the <tt>childNodes</tt> of an attribute containing a potentially complex subtree of DOM nodes. DOMC currently has very weak support for entity references and as a result attributes will never have children. The default module for loading and storing XML documents uses the Expat XML parser which expands entity references by default. Expat recently added support for parsing external entities but DOMC does not yet use this functionalty.</i>
+<H3>4.1. The DOM_Element functions</H3>
+<A name="getAttribute"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Element_getAttribute</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_String *DOM_Element_getAttribute(DOM_Element *this, DOM_String *name);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Element_getAttribute</tt> function returns the <tt>nodeValue</tt> of the named attrbute or an empty string if this element does have an attribute by that name.
+<BR>
+<P>
+</P>
+<A name="setAttribute"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Element_setAttribute</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  void DOM_Element_setAttribute(DOM_Element *this,
+           DOM_String *name,
+           DOM_String *value);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Element_setAttribute</tt> method adds a new attribute or sets the <tt>nodeValue</tt> of an existing attribute. Take care not to pass markup characters in the <tt>name</tt> and <tt>value</tt> parameters. It will be accepted and the resulting serialized XML may be incorrect.
+<BR>
+<P>
+</P>
+<A name="removeAttribute"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Element_removeAttribute</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  void DOM_Element_removeAttribute(DOM_Element *this, DOM_String *name);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Element_removeAttribute</tt> function removes and frees the named attribute.
+<p>
+</p>
+Note the W3C specifications require that an attribute with a default DTD
+value should automatically be repopulated if a user supplied attribute
+value is removed. DOMC does not support default DTD values. This function
+will simply remove the attribute regarless of whether or not the attribute
+value was specified in the DTD. The Expat XML parser just released support
+for parsing external entities. DOMC will likely support external entities
+and default attribute values in a future version.
+<BR>
+<P>
+</P>
+<A name="getAttributeNode"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Element_getAttributeNode</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Attr *DOM_Element_getAttributeNode(DOM_Element *this, DOM_String *name);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Element_getAttributeNode</tt> function returns the <tt>DOM_Attr *</tt> by name. If this element does not have an attibute with that name a null pointer is returned.
+<BR>
+<P>
+</P>
+<A name="setAttributeNode"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Element_setAttributeNode</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Attr *DOM_Element_setAttributeNode(DOM_Element *this, DOM_Attr *newAttr);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Element_setAttributeNode</tt> function adds the attribute <tt>newAttr</tt> to the attributes of this element. If this element already has an attribute with the same name it will be replaced with the new attribute and returned.
+<BR>
+<B>Returns</B>
+<BR>
+The <tt>DOM_Element_setAttributeNode</tt> function returns the attribute being replaced if one with the same name already exists in the map. Otherwise a null pointer is returned.
+<P>
+</P>
+<A name="removeAttributeNode"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Element_removeAttributeNode</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Attr *DOM_Element_removeAttributeNode(DOM_Element *this, DOM_Attr *oldAttr);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Element_removeAttributeNode</tt> function removes and returns a pointer to the attribtue <tt>oldAttr</tt>.
+<p>
+</p>
+<i>DOMC does not support default DTD values. This function will remove an attribute regarless of whether or not a default attribute value was specified in the DTD.</i>
+<BR>
+<P>
+</P>
+<A name="getElementsByTagName"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Element_getElementsByTagName</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_NodeList *DOM_Element_getElementsByTagName(DOM_Element *this, DOM_String *name);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Element_getElementsByTagName</tt> function allocates memory for a <tt>DOM_NodeList</tt> object, performs a preorder traversal of the subtree specified by <tt>this</tt>, and adds a pointer to the node list for each <tt>DOM_Element</tt> node with a <tt>nodeName</tt> that matches the <tt>name</tt> parameter. Because elements are added to the list as they are encountered during preoder traversal the effect is that elements will be listed in "document order".
+<p>
+</p>
+After the <tt>DOM_NodeList</tt> object will no longer to be used it must be freed with the <tt>DOM_Document_destroyNodeList</tt> function with a <tt>free_nodes</tt> parameter of 0 (the nodes in this list should not be freed or all other references to them will be invalid).
+<BR>
+<B>Returns</B>
+<BR>A new <tt>DOM_NodeList</tt> object containing pointers to the matching <tt>DOM_Element</tt>s.<P>
+</P>
+<A name="hasAttribute"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Element_hasAttribute</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  int DOM_Element_hasAttribute(DOM_Element *this, DOM_String *name);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Element_hasAttribute</tt> function returns 1 if this element has an attribute with the specified name or 0 if there is no such element.
+<BR>
+<P>
+</P>
+<HR NOSHADE>
+	Copyright 2003 Michael B. Allen &lt;mballen@erols.com&gt;
+	Generated by CStyleX 0.1.1
+</BODY>
+</HTML>

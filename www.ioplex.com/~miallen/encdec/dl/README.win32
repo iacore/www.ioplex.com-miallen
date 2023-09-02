@@ -1,0 +1,61 @@
+INSTALLATION
+
+There are source and binary packages:
+
+  encdec-0.3.7.zip     - zip archive of source
+  encdec-0.3.7.bin.zip - Win32 encdec.dll, encdec.lib, encdec.h, docs
+
+The  encdec  I18N  string  functions are not very useful on Windows because
+encdec  uses  the  locale  dependant  character encoding as it's normalized
+encoding.  On  Unix this can be UTF-8 which is Unicode and therefore it can
+do  the  full  range of conversions. But on Windows it does not appear that
+you  can  specify UTF-8 (there is a CP_UTF8 codepage but it does not appear
+to  work  with setlocale). Unicode on Windows is designed around UCS-2LE or
+UTF-16LE.  But  you could decode ISO-8859-2 strings if your locale encoding
+was  Cp1250  or  do  similar  compatible  conversions. You could also write
+Unicode  like  UTF-8,  UCS-2BE,  UTF-16LE,  etc.  In  theory there are many
+usefull  conversions  but  you  cannot  convert from say KOI8-R to UTF-16LE
+unless  the program were running in with a locale encoding of Cp1251 but if
+an  incompatible  character  is  encountered  (e.g.  the  box/line  drawing
+characters in KIO8-R are not in Cp1251) the string functions will return an
+error.  Coupled  with  the  fact that the encoding tables are quite large a
+string-less  package  is available that provides just integer, float, time,
+and similar functions. 
+
+The  .bin.zip  provides  encdec.dll  which can be placed in the PATH of the
+program  using it (probably C:\WINNT\system32). If you want to build source
+it  will  be  necessary to get libiconv (see GNU website mentioned below or
+the  encdec download area), make that, edit Makefile.msvc, and nmake either
+the  .dll  or .lib but the procedure differs depending on which you wish to
+build. 
+
+For  the  dll  the procedure is to first get Bruno Haible's libiconv source
+possibly from: 
+
+  http://www.gnu.org/directory/libiconv.html
+
+and build it with:
+
+  > cd libiconv-1.8
+  > nmake -f Makefile.msvc distclean
+  > nmake -f Makefile.msvc DLL=1 MFLAGS=-MD
+
+Notice   I  found  the  distclean  was  necessary  with  libiconv-1.7.  See
+libiconv-1.x\README.Win32  for  official  instructions.  Now  build  encdec
+against   that   by  just  changing  the  LIBICONV  macro  at  the  top  of
+Makefile.msvc to specify the location of the libiconv and make it: 
+
+  > cd encdec-0.3.7
+  [edit LIBICONV in Makefile.msvc]
+  > nmake -f Makefile.msvc
+
+To  make  the  static .lib just build libiconv without any nmake parameters
+(described  in  libiconv-1.8\README.Win32),  change the LIBICONV macro, and
+'nmake  -f  Makefile.msvc  encdec.lib'.  My procedure has been to build the
+libiconv  lib,  the encdec lib, distclean libiconv, build the libiconv dll,
+and finally build the encdec dll.
+
+IMPORTANT:  On Windows it is vital that binary files be read and written in
+binary mode using fopen(filename, "rb") and fopen(filename, "wb"). Buffered
+streams that do not use binary mode will certainly encounter problems. 
+

@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<STYLE TYPE="text/css">
+		BODY {
+			background-color: #808080;
+		}
+		H1 {
+			font-family: verdana, arial;
+			font-size: normal;
+			color: #000000;
+		}
+		H2 {
+			font-family: verdana, arial;
+			font-size: normal;
+			color: #000000;
+		}
+		H3 {
+			font-family: verdana, arial;
+			font-size: small;
+			color: #000080;
+		}
+		A {
+			color: #000080;
+			font-weight: bold;
+		}
+		BIG {
+			color: #000080;
+			font-weight: bold;
+			font-size: 50px;
+		}
+		EM {
+			color: #000080;
+			font-family: Times New Roman;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		PRE { 
+		    font-family: monospaced, courier;
+		    white-space: pre; 
+		    color: black;
+		    background-color: #e0e0e0; 
+		}
+		TABLE {
+			border-collapse: collapse;
+		}
+		TH, TD {
+			font-family: verdana, arial;
+			font-size: small;
+		}
+		.mainpane {
+			background-color: #f5f5f5;
+			padding: 10px;
+		}
+		.leftpane {
+			background-color: #f5f5f5;
+			padding: 10px;
+		}
+		.middlepane {
+			background-color: #f5f5f5;
+			padding: 10px;
+		}
+		.footer {
+			background-color: #808080;
+		}
+	</STYLE>
+<TITLE>DOMC</TITLE>
+</HEAD>
+<BODY>
+<TABLE>
+<TR>
+<TD colspan="2" class="mainpane"><BIG>DOMC</BIG>
+<BR>
+<b>The Document Object Model in C</b>
+<P>
+</P>
+DOMC is a light weight C implementation of the DOM as specified in the W3C Document Object Model Level 1 Core, Level 2 Core, and Level 2 Events recommendations. The DOM is a popular API for manipulating XML and HTML documents as a tree of nodes in memory. It is the more sophisticated but more memory constraining alternative to the SAX API.
+<p>
+</p>
+This implementation is not W3C compliant because it lacks support for entity references, DOCTYPE nodes, DTD default values, and other peripheral functionality. The <tt>DOM_Node</tt> type and it's associated operations has been used extensively however. A simple serialization module that uses <a href="http://expat.sourceforge.net/">Expat</a> is provided.
+<p>
+</p>
+Some important requirements are:
+<ul>
+<li>The <a href="../libmba/index.html">libmba library</a> is required.</li>
+<li>For i18n support the <a href="../encdec/index.html">encdec package</a> is required and the encdec package requires the <tt>__STDC_ISO_10646__</tt> environment. Because this is not supported on many platforms UTF-8 support is disabled by default.</li>
+<li>The software is targeted for the GNU Unix environment although Win32 binaries are available as is a makefile that works with MSVC++ on Windows NT4.</li>
+</ul>
+<P>
+</P>
+</TD>
+</TR>
+<TR>
+<TD valign="top" width="250" class="leftpane">
+<h1>Links</h1>
+<a href="dl/index.html">Download</a>
+<br>
+<a href="dl/docs/ref/domc.html">API Reference</a>
+<br>
+<a href="dl/src/index.html">Browse The Source</a>
+<br>
+<br>
+<h2>W3C Recommendations</h2>
+<a href="http://www.w3.org/DOM/DOMTR" target="_top">Technical Reports</a>
+<br>
+<a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html" target="_top">Level 2 Core</a>
+<br>
+<a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113/events.html" target="_top">Level 2 Events</a>
+<br>
+</TD><TD valign="top" class="middlepane">
+<h1>News</h1>
+<EM>domc-0.8.0 released</EM>
+<BR>
+<SMALL>Thu Sep 9, 2004</SMALL>
+<BR>
+The <tt>DOM_Document_load/fread</tt> functions did not return 0 for success and -1 on error as advertised in the documentation. This has been changed (thus the change in minor number). A memory leak was fixed in the Expat DOCTYPE handler. Finally, the rtfx folks have supplied some more changes - large node lists now use a hashmap to improve performance.
+<BR>
+<EM>domc-0.7.1 released</EM>
+<BR>
+<SMALL>Wed Aug 4, 2004</SMALL>
+<BR>
+Some minor changes from the author of <a href="http://memberwebs.com/nielsen/software/rtfx/">rtfx</a> have been applied. Also the package has been updated to work with the patest version of libmba.
+<BR>
+<EM>domc-0.7.0 released</EM>
+<BR>
+<SMALL>Sat Mar 22, 2003</SMALL>
+<BR>
+Significant work has been performed with respect to entities, DTDs, and similar however DOMC still does not fully support this functionality. The events work has been largely completed. The API documentation has also seen significant improvements.
+<BR>
+<EM>domc-0.6.6 released</EM>
+<BR>
+<SMALL>Tue Nov 5, 2002</SMALL>
+<BR>
+The portability of DOMC has been greatly improved. It is known to compile on Linux, Solaris, and Windows. This release does not add new functionality however there have been many small changes and updates particularly to the Events code. For your convenience <a href="../libmba/index.html">libmba-0.4.4</a> has been included and incorporated into the build. The build process and documentation arrangement has also been greatly improved.
+<BR>
+<EM>W3C Comformance Test Suite</EM>
+<BR>
+<SMALL>Fri Apr 5, 2002</SMALL>
+<BR>
+Before releasing domc-0.6.0 I tested it with unit test code generated from XSLT templates written by various people associated with the <a href="http://www.w3.org/DOM/Test">W3C's DOM Conformace Test Suite</a> working group. I adapted their Java transform to generate C code for use with the <a href="http://check.sourceforge.net/">Check</a> test harness. The <a href="https://www.ioplex.com/~miallen/domc/src/domc-ts-0.6.0.tar.gz">domc-ts-0.6.0.tar.gz</a> package contains this transform and necessary support code to built and run these tests. This work might be a good place to start for other developers implementing the DOM in C.
+
+<BR>
+<EM>domc-0.6.0 released</EM>
+<BR>
+<SMALL>Sun Mar 31, 2002</SMALL>
+<BR>
+DOMC will now use the locale dependant multi-byte character encoding internally for the <tt>DOM_String</tt> type. The <tt>expatls.c</tt> serialization module will read UTF-16 and UTF-8 encoded XML source files if DOMC is compiled with the <a href="http://users.erols.com/mballen/encdec/">encdec library</a>. Also, the very small <a href="http://users.erols.com/mballen/libmba/">libmba library</a> is now required (I became tired of copying over the various modules). The <a href="http://www.w3.org/DOM/Test">DOM Conformace Test Suite</a> has been used to perform unit testing so I am much more confident about the stabilty of DOMC. Finally, the <a href="https://www.ioplex.com/~miallen/domc/src/docs/api/index.html">API Reference</a> has been greatly improved. It was generated with the included <a href="https://www.ioplex.com/~miallen/domc/src/docs/api/ref.xsl"><tt>ref.xsl</tt></a> XSLT style sheet.
+<BR>
+<EM>domc-0.5.8 released</EM>
+<BR>
+<SMALL>Thu Dec 20, 2001</SMALL>
+<BR>
+The 0.5.7 package was not prepared properly at all. This new package has been rebuilt and tested thoroughly. It should install as described in the INSTALLATION section of the README.
+<BR>
+<EM>domc-0.5.7 released</EM>
+<BR>
+<SMALL>Wed Dec 19, 2001</SMALL>
+<BR>
+Several users have asked for the ability to load and store XML documents from a file descriptor. The DOM_DocumentLS_fread and DOM_DocumentLS_fwrite methods will do just that. There have been numberous other small changes and build improvements. Sorry, no zip this time.
+<BR>
+<P>
+</P>
+</TD>
+</TR>
+<TR>
+<TD colspan="2" class="footer">
+<hr noshade>
+<small>
+		Last updated Sep 9, 2004<BR>domc-0.8.0<BR>
+		API documentation and website generated with <a href="../cstylex" style="color: black;">CSytleX</a>
+<BR>
+		Copyright © 2004 <BR>
+<a href="http://validator.w3.org/check/referer" style="color: black;">validate this page</a></small></TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>

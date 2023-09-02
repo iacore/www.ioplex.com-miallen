@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE library [
+	<!ENTITY encdec SYSTEM "encdec.xml">
+]>
+
+<library name="encdec">
+	<title>encdec &lt;encdec.h&gt;</title>
+	<desc>
+The encdec package is ...
+	</desc>
+	&encdec;
+</library>
+

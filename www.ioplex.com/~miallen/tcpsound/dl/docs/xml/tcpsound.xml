@@ -1,0 +1,66 @@
+<interface name="tcpsound"
+	short="like tcpdump but with sound">
+
+<comments>
+	Copyright 2004 Michael B Allen &lt;mba2000 ioplex.com&gt;
+</comments>
+
+<title>tcpsound</title>
+<desc>
+The <ident>tcpsound</ident>(1) utility will play sounds in response to network traffic permitting a user to literally listen to a network. Specifically <ident>tcpsound</ident> forks a pseudo terminal in which to run <ident>tcpdump</ident>(8), parses that output, and plays a wide variety of user configuable sounds. Interpreting the output of <ident>tcpdump</ident> in a pty permits <ident>tcpsound</ident> to first <ident>ssh</ident>(1) to a remote host if desired.
+<p/>
+<ident>-h</ident> - print usage
+<p/>
+<ident>-c</ident> &lt;configfile&gt; - load sound rules from &lt;configfile&gt; rather than the default file ${HOME}/.tcpsound. The properties supported in the configuration file are:
+<p/>
+<tt>searchpath</tt> - A colon ':' separated list of directories in which to search for wav files.
+<p/>
+<tt>remoteprompt</tt> - A string matching the command prompt of a remote shell if the <ident>-r</ident> option is used. The default is '# '. Quotes are note permitted in properties files and all leading and trailing space will be trimmed if it is not excaped. Thus to preserve a trailing space in the string it will be necessary to use something like the following: <tt>'remoteprompt = root$\\ '</tt> where the last character on the line is a space. See <ident>-r</ident> description below.
+<p/>
+<tt>snd.*</tt> - A match rule that specifies which sound to play in response to a network packet. Full property names are arbirary but all property keys must be uniqe. Each value is a comma separated list defined in order as follows:
+<pre>
+protocol; 1 is ARP, 2 is IP, 3 is ICMP
+source port number or 0 for any port
+destination port number or 0 for any port
+filename of wav file to play if rule matches
+</pre>
+Match Rule Examples:
+<p/>
+Incoming or outgoing packets on port 25 (smtp) play cuckoo.wav:
+<pre>
+snd.foo.bar = 2,25,25,cuckoo.wav
+</pre>
+Incoming HTTP packets play KDE_Click.wav whereas outgoing HTTP packets play info.wav:
+<pre>
+snd.http.in  = 2,0,80,KDE_Click.wav
+snd.http.out = 2,80,0,info.wav
+</pre>
+Play the default Windows sound when an MS-RPC packet is encountered (provided you have the winnt/Media directory in your <tt>searchpath</tt>):
+<pre>
+snd.windoze = 2,135,135,ding.wav
+</pre>
+<ident>-r</ident> &lt;user@sshhost&gt; - run <ident>tcpdump</ident> on a different host. The pty will temporarily relinquish control to the parent terminal until a remote prompt is encountered (default of '# ' may be changed with the <tt>remoteprompt</tt> property) at which point <ident>tcpsound</ident> will start <ident>tcpdump</ident>.
+<p/>
+All remaining parameters are passed uninterpreted to <ident>tcpdump</ident> although the <ident>tcpdump</ident> <ident>-nn</ident> option will be prefixed to all <ident>tcpdump</ident> options as the resulting output format is required by the <ident>tcpsound</ident> interpreter.
+<p/>
+Examples:
+<p/>
+Run <ident>tcpdump</ident> on a remote host. Note it is important to exclude ssh traffic as each packet printed will generate ssh traffic which will print more packets and more traffic ad infinitum.
+<pre>
+# tcpdump -r mysvr.com ! port ssh
+</pre>
+Use a custom sounds file and monitor traffic on a remote host except ports 22, 53, and 80.
+<pre>
+$ tcpdump -c sasser.cfg -r root@router10.acme.com ! port ssh and ! port 53 and ! port 80
+</pre>
+</desc>
+
+<group>
+<code>
+<pre>
+tcpsound [-h] [-c &lt;configfile&gt;] [-r &lt;user@sshhost&gt;] [&lt;tcpdumpoptions&gt;]
+</pre>
+</code>
+</group>
+
+</interface>

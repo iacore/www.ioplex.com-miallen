@@ -1,0 +1,12 @@
+diff -dur libmba-0.9.1.ORIG/src/svcond.c libmba-0.9.1/src/svcond.c
+--- libmba-0.9.1.ORIG/src/svcond.c	2005-03-18 14:59:09.000000000 -0700
++++ libmba-0.9.1/src/svcond.c	2007-04-28 16:33:50.000000000 -0600
+@@ -73,7 +73,7 @@
+ 		return -1;
+ 	}
+ 
+-	memset(cond, sizeof *cond, 0);
++	memset(cond, 0, sizeof(*cond));
+ 	cond->sempool = sempool;
+ 
+ 	if ((cond->blocked_lock = pool_get(sempool)) == NULL ||

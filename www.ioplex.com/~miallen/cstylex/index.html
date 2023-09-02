@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<STYLE TYPE="text/css">
+		BODY {
+			background-color: #e0e0e0;
+		}
+		H1 {
+			font-family: verdana, arial;
+			font-size: normal;
+			color: #000000;
+		}
+		H2 {
+			font-family: verdana, arial;
+			font-size: normal;
+			color: #000000;
+		}
+		H3 {
+			font-family: verdana, arial;
+			font-size: small;
+			color: #404040;
+		}
+		A {
+			color: #404040;
+			font-weight: bold;
+		}
+		BIG {
+			color: #404040;
+			font-weight: bold;
+			font-size: 50px;
+		}
+		EM {
+			color: #404040;
+			font-family: Times New Roman;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		PRE { 
+		    font-family: monospaced, courier;
+		    border: 1px solid black;
+		    white-space: pre; 
+		    color: black;
+		    background-color: #dfdfdf; 
+		}
+		TABLE {
+			border-collapse: collapse;
+		}
+		TH, TD {
+			font-family: verdana, arial;
+			font-size: small;
+		}
+		.mainpane {
+			background-color: #f0f0f0;
+			padding: 10px;
+		}
+		.leftpane {
+			background-color: #f0f0f0;
+			padding: 10px;
+		}
+		.middlepane {
+			background-color: #f0f0f0;
+			padding: 10px;
+		}
+		.footer {
+			background-color: #e0e0e0;
+		}
+	</STYLE>
+<TITLE>CStyleX</TITLE>
+</HEAD>
+<BODY>
+<TABLE>
+<TR>
+<TD colspan="2" class="mainpane"><BIG>CStyleX</BIG>
+<BR>
+<b>XSLT Generated Documentation for C Libraries</b>
+<P>
+</P>
+CStyleX is a documentation system that uses a ref.xsl and man.xsl XSLT
+transforms to convert an XML input file describing the interface of a
+module in a C library into both an HTML reference and man pages. Multiple
+interface definitions are compiled into an API reference that looks
+roughly similar to Java's javadoc. Man pages use concise GNU style troff
+macros. The author must create the XML input files. The input files are
+not created from header files or source code.
+<p>
+</p>
+Here are some HTML reference examples and their associated
+XML input files that conform to the tag arragement roughly outlined in
+<a href="dl/xml/README.txt">README.txt</a>:
+<blockquote>
+<table width="500" align="center">
+<tr>
+<td><b>XML Input File</b></td>
+<td></td>
+<td><b>HTML Reference Page</b></td>
+</tr>
+<tr>
+<td><a href="view-source:http://www.ioplex.com/~miallen/libmba/dl/docs/xml/cfg.xml">cfg.xml</a></td>
+<td width="100"> --&gt; </td>
+<td><a href="../libmba/dl/docs/ref/cfg.html">cfg.html</a></td>
+</tr>
+<tr>
+<td><a href="view-source:http://www.ioplex.com/~miallen/domc/dl/docs/xml/DOM_Element.xml">DOM_Element.xml</a></td>
+<td>--&gt;</td>
+<td><a href="../domc/dl/docs/ref/DOM_Element.html">DOM_Element.html</a></td>
+</tr>
+<tr>
+<td><a href="view-source:http://www.ioplex.com/~miallen/encdec/dl/docs/xml/encdec.xml">encdec.xml</a></td>
+<td>--&gt;</td>
+<td><a href="../encdec/dl/docs/ref/encdec.html">encdec.html</a></td>
+</tr>
+</table>
+</blockquote>
+Here is the entire <a href="../libmba/dl/docs/ref/libmba.html">API
+Reference</a> from libmba. A proj.xsl transform is also
+provided to create project web pages like those of <a href="../libmba/index.html">libmba</a> and <a href="../encdec/index.html">encdec</a>. Natrually,
+the author can easily adjust the transform or simply change CSS properties
+to make their HTML reference unique.
+<p>
+</p>
+For example, this is the <tt>cfg_get_int</tt> block from the interface definition for libmba's <tt>cfg</tt> module:
+<pre>
+
+  &lt;meth name="get_int"&gt;
+      &lt;pre&gt;int cfg_get_int(struct cfg *this, int *dst, int def, const char *name);&lt;/pre&gt;
+      &lt;param name="this"/&gt;
+      &lt;param name="dst"/&gt;
+      &lt;param name="def"/&gt;
+      &lt;param name="name"/&gt;
+      &lt;desc&gt;  
+  The &lt;ident&gt;cfg_get_int&lt;/ident&gt; function ...
+
+</pre>
+A <tt>wrap="true"</tt> attribute may be specified for <tt>meth</tt> and <tt>func</tt> tags to indicate that each parameter should appear indented on a new line.
+
+<P>
+</P>
+</TD>
+</TR>
+<TR>
+<TD valign="top" width="250" class="leftpane">
+<h1>Links</h1>
+<a href="dl/index.html">Download</a>
+<br>
+</TD><TD valign="top" class="middlepane">
+<h1>News</h1>
+<EM>cstylex-0.2.0 released</EM>
+<BR>
+<SMALL>Sat May 8, 2004</SMALL>
+<BR>
+All stylesheets have been updated. For the latest style sheets check libmba's docs/xml directory.
+<BR>
+<P>
+</P>
+<EM>cstylex-0.1.2 released</EM>
+<BR>
+<SMALL>Wed Jul 23, 2003</SMALL>
+<BR>
+Prototypes containing parametersi with square brackets like <tt>char *row[]</tt> would confuse <tt>man.xsl</tt>. Brackets are  now supported properly in man pages. The <tt>man.xsl</tt> stypesheet also did not properly display the two characters <tt>\0</tt>. Troff would interpret the <tt>\</tt> as an escape. These are now escaped with <tt>\\</tt> which troff displays correctly as a single <tt>\</tt>. The <tt>ref.xsl</tt> stylesheet has been adjusted to only print the Synopsis and Description sections if a <tt>pre</tt> child is present. There may have been other minor adjustements as well.
+<BR>
+<P>
+</P>
+<EM>cstylex-0.1.1 released</EM>
+<BR>
+<SMALL>Sun Mar 23, 2003</SMALL>
+<BR>
+The CSS generated by ref.xsl for the HTML reference has been changed; a sans-serif font is used and a point size is not specified so that browsers can adjust font size using the normal controls (e.g. Ctrl-/Ctrl+ with Mozilla). Multiple include tags will result in an <tt>#include</tt> statement in the synopsis sections. There have been a few other small changes. The projects listed above as examples of CStyleX use these new style sheets.
+<BR>
+<P>
+</P>
+<EM>cstylex-0.1.0 released</EM>
+<BR>
+<SMALL>Sat Nov 16, 2002</SMALL>
+<BR>
+Initial release.
+<BR>
+<P>
+</P>
+</TD>
+</TR>
+<TR>
+<TD colspan="2" class="footer">
+<hr noshade>
+<small>
+		Last updated May 8, 2004<BR>cstylex-0.2.0<BR>
+		API documentation and website generated with <a href="../cstylex" style="color: black;">CSytleX</a>
+<BR>
+		Copyright © 2004 Michael B Allen &lt;mba2000 ioplex.com&gt;<BR>
+<a href="http://validator.w3.org/check/referer" style="color: black;">validate this page</a></small></TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>

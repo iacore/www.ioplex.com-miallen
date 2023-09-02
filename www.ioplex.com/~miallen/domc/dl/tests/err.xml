@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE err SYSTEM "err.dtd" [
+   <!ENTITY E "This is a general entity">
+]>
+<err>
+The entity is: &E;
+</err>

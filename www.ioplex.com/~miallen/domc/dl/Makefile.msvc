@@ -1,0 +1,23 @@
+!include <win32.mak>
+LIBMBA=..\libmba-0.8.9
+EXPAT=..\Expat-1.95.5
+# For i18n support in domc the encdec library is required.
+# Specify were the encdec library is below, change HAVE_ENCDEC to 1
+# in src\defines.h and add /LIBPATH:$(ENCDEC) encdec.lib to the
+# .dll link command.
+ENCDEC=..\encdec-0.3.7
+OBJS=src\expatls.obj src\events.obj src\timestamp.obj src\dom.obj src\node.obj src\namednodemap.obj src\nodelist.obj src\wcwidth.obj
+
+
+domc.dll: $(OBJS)
+	$(link) /INCREMENTAL:NO /NOLOGO /LIBPATH:$(EXPAT)\Libs /LIBPATH:$(LIBMBA) /LIBPATH:$(ENCDEC) libexpat.lib libmba.lib encdec.lib /DEF:domc.def /OUT:domc.dll -entry:_DllMainCRTStartup@12 -dll $(OBJS)
+
+domc.lib: $(OBJS)
+	$(implib) -machine:$(CPU) -out:domc.lib $(OBJS)
+
+.c.obj:
+	$(cc) $(cflags) /I$(EXPAT)\Source\lib /I$(ENCDEC)\src /I$(LIBMBA)\src /Fo$@ $*.c
+
+clean:
+	del domc.dll domc.lib domc.exp $(OBJS)
+

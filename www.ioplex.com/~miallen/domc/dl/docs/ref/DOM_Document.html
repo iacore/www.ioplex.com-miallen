@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<STYLE TYPE="text/css">
+		BODY {
+			background-color: f5f5f5;
+			font-family: verdana, arial; font-size: small;
+		}
+		H2, H3, A, .tfc {
+			color: #000080;
+			font-family: verdana, arial; font-size: small;
+		}
+		PRE { 
+		    font-family: monospace;
+		    border: 1px solid black;
+		    white-space: pre; 
+		    color: black;
+		    background-color: #dfdfdf; 
+		}
+		TABLE {
+			float: right;
+			border-collapse: collapse;
+			border-top: 1px solid #000000;
+			border-right: 1px solid #000000;
+			border-left: 1px solid #000000;
+		}
+		TH {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+		}
+		TD {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+			border-bottom: 1px solid #000000;
+			border-right: 1px solid #000000;
+		}
+	</STYLE>
+<TITLE>DOM_Document</TITLE>
+</HEAD>
+<BODY>
+<H2>2. DOM_Document</H2>
+A <tt>DOM_Document</tt> represents an entire XML document and acts as the root of the DOM tree. Because nodes cannot exist outside of the context of a <tt>DOM_Document</tt> this interface provides the factory methods needed to create individual nodes to compose and modify DOM trees. The <tt>ownerDocument</tt> member of a <tt>DOM_Node</tt> points to the document from which it was created (except <tt>DOM_DocumentType</tt> and <tt>DOM_Document</tt> which may have a NULL <tt>ownerDocument</tt> member). This interface also provides the <tt>DOM_Document_getElementsByTagName</tt> function for retriving all elements with a specified name.
+<p>
+</p>
+To build a document from scratch use the expression <tt>DOM_Implementation_createDocument(NULL, NULL, NULL)</tt> to create an empty document and add new nodes using <tt>DOM_Document_createElement</tt>, <tt>DOM_Document_createComment</tt>, etc with <tt>DOM_Node_appendChild</tt>, <tt>DOM_Node_insertBefore</tt> or similar. See the <tt>DOM_Implementation</tt> and <tt>DOM_Node</tt> interface documentation for details.
+<p>
+</p>
+<b>Memory Management</b>
+<p>
+</p>
+The <tt>DOM_DocumentLS_load</tt>, <tt>DOM_DocumentLS_read</tt>, and <tt>DOM_Document_createXxx</tt> functions allocate memory that must at some point be freed with <tt>DOM_Document_destoryNode</tt>.
+The <tt>DOM_Document_destroyNode</tt> function may be used to released nodes of all types such as <tt>DOM_Element</tt>, <tt>DOM_Text</tt>, <tt>DOM_Attr</tt>, <tt>DOM_Document</tt>. All children of a node are freed when the parent is freed.
+An entire document may be free with the expression <tt>DOM_Document_destroyNode(doc, doc)</tt>.
+Beware that freeing a node that is still a decendant of another node will result in a tree with invalid pointers and will cause the program to crash when freed again.
+There are only two other special cases to consider. First, the <tt>DOM_Document_destroyNodeList</tt> function must be called for each <tt>DOM_NodeList</tt> returned by <tt>DOM_Element_getElementsByTagName</tt> and <tt>DOM_Document_getElementsByTagName</tt>. Second, the <tt>DOM_DocumentFragment</tt> node cannot be a child of another node. When added to the tree, it's children are actually moved into the target node leaving an empty <tt>DOM_DocumentFragment</tt>. This empty node must be freed with <tt>DOM_Document_destroyNode</tt> if it will no longer be used. For completeness, the <tt>DOM_DocumentEvent_destroyEvent</tt> function must be called to free <tt>DOM_Event</tt> objects however that non-core API is not yet documented here.
+<H3>2.1. The DOM_DocumentLS functions</H3>These functions are used to load and store DOM trees from and to XML. Currently the Expat XML parser is used to parse XML. These functions are specific to DOMC.<A name="DOM_DocumentLS_load"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_DocumentLS_load</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  int DOM_DocumentLS_load(DOM_DocumentLS *this, const char *uri);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_DocumentLS_load</tt> function builds a DOM tree from the complete well formed XML document specified by the <tt>uri</tt> parameter.
+<BR>
+<B>Returns</B>
+<BR>
+The <tt>DOM_DocumentLS_load</tt> function returns 0 if the file was successfully loaded. Otherwise -1 is returned and <tt>DOM_Exception</tt> is set appropriately.
+<BR>
+<P>
+</P>
+<A name="DOM_DocumentLS_save"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_DocumentLS_save</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  int DOM_DocumentLS_save(DOM_DocumentLS *this, const char *uri, const DOM_Node *node);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_DocumentLS_save</tt> function serializes the <tt>DOM_DocumentLS</tt> object to a file specified by the <tt>uri</tt> parameter. Normally this object is a complete <tt>DOM_Document</tt> node however any <tt>DOM_Node</tt> type such as a <tt>DOM_Element</tt> will be accepted (although only a complete well formed XML document may be loaded).
+<BR>
+<B>Returns</B>
+<BR>
+The <tt>DOM_DocumentLS_save</tt> function returns 0 if the file was successfully saved. Otherwise -1 is returned and <tt>DOM_Exception</tt> is set appropriately.
+<BR>
+<P>
+</P>
+<A name="DOM_DocumentLS_fread"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_DocumentLS_fread</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  int DOM_DocumentLS_fread(DOM_DocumentLS *this, FILE *stream);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_DocumentLS_fread</tt> function builds a DOM tree from the complete well formed XML document read from the stream specified by the <tt>stream</tt> parameter.
+<BR>
+<B>Returns</B>
+<BR>
+The <tt>DOM_DocumentLS_fread</tt> function returns 0 if complete XML document was successfully read. Otherwise -1 is returned and <tt>DOM_Exception</tt> is set appropriately.
+<BR>
+<P>
+</P>
+<A name="DOM_DocumentLS_fwrite"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_DocumentLS_fwrite</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  int DOM_DocumentLS_fwrite(const DOM_DocumentLS *this, FILE *stream);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_DocumentLS_fwrite</tt> function serializes the <tt>DOM_DocumentLS</tt> object to the stream specified by the <tt>stream</tt> parameter. Normally this object is a complete <tt>DOM_Document</tt> node however any <tt>DOM_Node</tt> type such as a <tt>DOM_Element</tt> will be accepted (although only a complete well formed XML document may be read).
+<BR>
+<B>Returns</B>
+<BR>
+The <tt>DOM_DocumentLS_fwrite</tt> function returns 0 if the node was successfully written. Otherwise -1 is returned and <tt>DOM_Exception</tt> is set appropriately.
+<BR>
+<P>
+</P>
+<H3>2.2. The DOM_Document functions</H3>These functions are used to create and destroy nodes of a document, retrieve all elements from a document by name, or access the <tt>documentElement</tt> of a <tt>DOM_Document</tt> object.<A name="getDocumentElement"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_getDocumentElement</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Element *DOM_Document_getDocumentElement(DOM_Document *doc);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+Returns the root element of the document tree. The root element is also accessable through the <tt>childNodes</tt> <tt>DOM_NodeList</tt> member however the children of a <tt>DOM_Document</tt> may also be processing instructions, document type nodes, and comments which may preceed the document element in the list. Therefore this function is provied as a convienience.
+<BR>
+<P>
+</P>
+<A name="destroyNode"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_destroyNode</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  void DOM_Document_destroyNode(DOM_Document *doc, DOM_Node *node);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Document_destroyNode</tt> function frees the node <tt>node</tt> as well as it's children if any. An entire DOM tree may be freed using the expression <tt>DOM_Document_destroyNode(doc, doc)</tt>. See the section above entitled <i>Memory Management</i>.
+<BR>
+<P>
+</P>
+<A name="destroyNodeList"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_destroyNodeList</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  void DOM_Document_destroyNodeList(DOM_Document *doc, DOM_NodeList *nl, int free_nodes);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Document_destroyNodeList</tt> function frees the <tt>DOM_NodeList</tt> object <tt>nl</tt>. The <tt>free_nodes</tt> parameter should be 0 indicating that nodes in the list should not be freed as they are almost certainly members of a DOM tree and will be freed when the tree is freed. This function must be called for each list returned by the <tt>DOM_Element_getElementsByTagName</tt> and <tt>DOM_Document_getElementsByTagName</tt> functions.
+<BR>
+<P>
+</P>
+<A name="createElement"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_createElement</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Element *DOM_Document_createElement(DOM_Document *this, DOM_String *tagName);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+Create a <tt>DOM_Element</tt> object with the name <tt>tagName</tt> with no children.
+<p>
+</p>
+<i>Note: currently DOMC does not populate default attributes specified in a DTD as it should.</i>
+<BR>
+<B>Returns</B>
+<BR>The new <tt>DOM_Element</tt> object or NULL if the operation failed in which case <tt>DOM_Exception</tt> will be set appropriately.<P>
+</P>
+<A name="createDocumentFragment"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_createDocumentFragment</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_DocumentFragment *DOM_Document_createDocumentFragment(DOM_Document *this);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+Create an empty <tt>DOM_DocumentFragment</tt> object into which other nodes may be placed. Subsequently inserting or appending a <tt>DOM_DocumentFragment</tt> into another node will move all of the fragments children into the target node. After doing this an empty <tt>DOM_DocumentFragment</tt> object is left behind and must be freed with <tt>DOM_Document_destroyNode</tt> if it will not be used again.
+<BR>
+<B>Returns</B>
+<BR>An empty <tt>DOM_DocumentFragment</tt> object or NULL if the operation failed in which case <tt>DOM_Exception</tt> will be set appropriately.<P>
+</P>
+<A name="createTextNode"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_createTextNode</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Text *DOM_Document_createTextNode(DOM_Document *this, DOM_String *data);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+Creates a <tt>DOM_Text</tt> node given the specified string represented by the <tt>data</tt> parameter.
+<BR>
+<B>Returns</B>
+<BR>The new <tt>DOM_Text</tt> object or NULL of the operation failed in which case <tt>DOM_Exception</tt> will be set appropriately.<P>
+</P>
+<A name="createComment"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_createComment</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Comment *DOM_Document_createComment(DOM_Document *this, DOM_String *data);<BR>
+</PRE>
+<B>Description</B>
+<BR>Creates a <tt>DOM_Comment</tt> node with the specified <tt>data</tt> parameter. The '&lt;--' and '--&gt;' comment delimiters are not part of the comment and should not be included in the <tt>data</tt> string.
+<BR>
+<B>Returns</B>
+<BR>The new <tt>DOM_Comment</tt> object or NULL of the operation failed in which case <tt>DOM_Exception</tt> will be set appropriately.<P>
+</P>
+<A name="createCDATASection"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_createCDATASection</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_CDATASection *DOM_Document_createCDATASection(DOM_Document *this, DOM_String *data);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+Creates a <tt>DOM_CDATASection</tt> node from the specified string <tt>data</tt>. Only the text inside the '&lt;[[' and ']]&gt;' brackets consititute the CDATA section content.
+<BR>
+<B>Returns</B>
+<BR>The new <tt>DOM_CDATASection</tt> object or NULL of the operation failed in which case <tt>DOM_Exception</tt> is set appropriately.<P>
+</P>
+<A name="createProcessingInstruction"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_createProcessingInstruction</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_ProcessingInstruction *DOM_Document_createProcessingInstruction(DOM_Document *this,
+           DOM_String *target,
+           DOM_String *data);<BR>
+</PRE>
+<B>Description</B>
+<BR>Creates a <tt>DOM_ProcessingInstruction</tt> node given the specified <tt>target</tt> and <tt>data</tt> string parameters. The '&lt;?' and '?&gt;' processing instruction delimiters are not part of the <tt>data</tt> string.
+<BR>
+<B>Returns</B>
+<BR>The new <tt>DOM_ProcessingInstruction</tt> object or NULL of the operation failed in which case <tt>DOM_Exception</tt> will be set appropriately.<P>
+</P>
+<A name="createAttribute"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_createAttribute</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Attr *DOM_Document_createAttribute(DOM_Document *this, DOM_String *name);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+Creates a <tt>DOM_Attr</tt> with the given <tt>name</tt> parameter. The <tt>DOM_Attr</tt> object may then be assigned to a <tt>DOM_Element</tt> using the <tt>DOM_Element_setAttributeNode</tt> function. All attributes of an element will be freed if the element is freed.
+<BR>
+<B>Returns</B>
+<BR>The new <tt>DOM_Attr</tt> object or NULL of the operation failed in which case <tt>DOM_Exception</tt> will be set appropriately.<P>
+</P>
+<A name="createEntityReference"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_createEntityReference</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_EntityReference *DOM_Document_createEntityReference(DOM_Document *this, DOM_String *name);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+Creates a <tt>DOM_EntityReference</tt> object.
+<p>
+</p>
+<i>Note: currently DOMC does not resolve entities, meaning the child list of a <tt>DOM_EntityReference</tt> will not be populated if the entity is known as it would in a full featured DOM implementation.</i>
+<BR>
+<B>Returns</B>
+<BR>The new <tt>DOM_EntityReference</tt> object or NULL of the operation failed in which case <tt>DOM_Exception</tt> will be set appropriately.<P>
+</P>
+<A name="getElementsByTagName"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Document_getElementsByTagName</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_NodeList *DOM_Document_getElementsByTagName(DOM_Document *this, DOM_String *tagname);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Document_getElementsByTagName</tt> function performs a preorder traversal of the entire document and returns a <tt>DOM_NodeList</tt> of the elements with the name <tt>tagname</tt> in the order in which they were encountered.
+<p>
+</p>
+After the <tt>DOM_NodeList</tt> object will no longer to be used it must be freed with the <tt>DOM_Document_destroyNodeList</tt> function with a <tt>free_nodes</tt> parameter of 0 (the nodes in this list should not be freed or all other references to them will be invalid).
+<BR>
+<B>Returns</B>
+<BR>A new <tt>DOM_NodeList</tt> object containing pointers to the matching <tt>DOM_Element</tt>s.<P>
+</P>
+<HR NOSHADE>
+	Copyright 2003 Michael B. Allen &lt;mballen@erols.com&gt;
+	Generated by CStyleX 0.1.1
+</BODY>
+</HTML>

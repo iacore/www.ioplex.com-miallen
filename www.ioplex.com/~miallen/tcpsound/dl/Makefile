@@ -1,0 +1,41 @@
+# Makefile for tcpsound
+
+prefix     = /usr/local
+
+bindir     = $(prefix)/bin
+wavdir     = $(prefix)/share/sounds
+includedir = $(prefix)/include
+libdir     = $(prefix)/lib
+mandir     = $(prefix)/man
+MAN        = tcpsound.1
+MANGZ      = $(MAN:.1=.1.gz)
+MKTOOL     = ./mktool
+CFLAGS     = -c -v -g -W1 -I$(includedir) -L$(libdir) -lSDL -lmba -lpthread
+CC         = $(MKTOOL)
+
+.SUFFIXES: .1 .1.gz
+
+tcpsound: mktool src/tcpsound.c src/sound.h src/sound.c src/parse.h src/parse.c
+	@$(CC) $(CFLAGS) src/sound.c src/parse.c src/tcpsound.c -o tcpsound
+play: mktool src/play.c
+	@$(CC) $(CFLAGS) src/play.c -o play
+
+mktool:
+	cc -g -o mktool mktool.c
+
+install: mktool
+	$(MKTOOL) -i -m 0755 tcpsound $(bindir)
+	$(MKTOOL) -i wavs/*.wav $(wavdir)
+	-$(MKTOOL) -i docs/man/*.1.gz $(mandir)/man1
+	@echo
+	@echo installation successful
+uninstall: mktool
+	$(MKTOOL) -u tcpsound $(bindir)
+	$(MKTOOL) -u wavs/*.wav $(wavdir)
+	$(MKTOOL) -u $(MANGZ) $(mandir)/man1
+	@echo
+	@echo de-installation successful
+
+clean:
+	rm -f tcpsound play
+

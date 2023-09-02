@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<STYLE TYPE="text/css">
+		BODY {
+			background-color: f5f5f5;
+			font-family: verdana, arial; font-size: small;
+		}
+		H2, H3, .tfc {
+			font-family: verdana, arial; font-size: small;
+			color: #000080;
+		}
+		A {
+			color: #000080;
+			font-weight: bold;
+		}
+		PRE { 
+		    font-family: monospaced, courier;
+		    border: 1px solid black;
+		    white-space: pre; 
+		    color: black;
+		    background-color: #dfdfdf; 
+		}
+		TABLE {
+			float: right;
+			border-collapse: collapse;
+			border-top: 1px solid #000000;
+			border-right: 1px solid #000000;
+		}
+		TH, TD {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+			border-bottom: 1px solid #000000;
+			border-left: 1px solid #000000;
+		}
+	</STYLE>
+<TITLE>DOMC &lt;domc.h&gt;</TITLE>
+</HEAD>
+<BODY>
+<H2>Index</H2>
+<A HREF="overview.html" TARGET="right">Overview</A>
+<BR>
+<A href="DOM_Implementation.html" target="right">DOM_Implementation</A>
+<BR>
+<SMALL>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Implementation.html#hasFeature" target="right">hasFeature</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Implementation.html#createDocumentType" target="right">createDocumentType</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Implementation.html#createDocument" target="right">createDocument</A>
+<BR>
+</SMALL><A href="DOM_Document.html" target="right">DOM_Document</A>
+<BR>
+<SMALL>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#DOM_DocumentLS_load" target="right">DOM_DocumentLS_load</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#DOM_DocumentLS_save" target="right">DOM_DocumentLS_save</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#DOM_DocumentLS_fread" target="right">DOM_DocumentLS_fread</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#DOM_DocumentLS_fwrite" target="right">DOM_DocumentLS_fwrite</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#getDocumentElement" target="right">getDocumentElement</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#destroyNode" target="right">destroyNode</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#destroyNodeList" target="right">destroyNodeList</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#createElement" target="right">createElement</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#createDocumentFragment" target="right">createDocumentFragment</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#createTextNode" target="right">createTextNode</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#createComment" target="right">createComment</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#createCDATASection" target="right">createCDATASection</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#createProcessingInstruction" target="right">createProcessingInstruction</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#createAttribute" target="right">createAttribute</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#createEntityReference" target="right">createEntityReference</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Document.html#getElementsByTagName" target="right">getElementsByTagName</A>
+<BR>
+</SMALL><A href="DOM_Node.html" target="right">DOM_Node</A>
+<BR>
+<SMALL>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Node.html#insertBefore" target="right">insertBefore</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Node.html#replaceChild" target="right">replaceChild</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Node.html#removeChild" target="right">removeChild</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Node.html#appendChild" target="right">appendChild</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Node.html#hasChildNodes" target="right">hasChildNodes</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Node.html#cloneNode" target="right">cloneNode</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Node.html#normalize" target="right">normalize</A>
+<BR>
+</SMALL><A href="DOM_Element.html" target="right">DOM_Element</A>
+<BR>
+<SMALL>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Element.html#getAttribute" target="right">getAttribute</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Element.html#setAttribute" target="right">setAttribute</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Element.html#removeAttribute" target="right">removeAttribute</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Element.html#getAttributeNode" target="right">getAttributeNode</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Element.html#setAttributeNode" target="right">setAttributeNode</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Element.html#removeAttributeNode" target="right">removeAttributeNode</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Element.html#getElementsByTagName" target="right">getElementsByTagName</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Element.html#hasAttribute" target="right">hasAttribute</A>
+<BR>
+</SMALL><A href="DOM_NamedNodeMap.html" target="right">DOM_NamedNodeMap</A>
+<BR>
+<SMALL>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_NamedNodeMap.html#" target="right">The DOM_NamedNodeMap ...</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_NamedNodeMap.html#getNamedItem" target="right">getNamedItem</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_NamedNodeMap.html#setNamedItem" target="right">setNamedItem</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_NamedNodeMap.html#removeNamedItem" target="right">removeNamedItem</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_NamedNodeMap.html#item" target="right">item</A>
+<BR>
+</SMALL><A href="DOM_NodeList.html" target="right">DOM_NodeList</A>
+<BR>
+<SMALL>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_NodeList.html#" target="right">The DOM_NodeList type</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_NodeList.html#item" target="right">item</A>
+<BR>
+</SMALL><A href="DOM_CharacterData.html" target="right">DOM_CharacterData</A>
+<BR>
+<SMALL>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_CharacterData.html#getLength" target="right">getLength</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_CharacterData.html#substringData" target="right">substringData</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_CharacterData.html#appendData" target="right">appendData</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_CharacterData.html#insertData" target="right">insertData</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_CharacterData.html#deleteData" target="right">deleteData</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_CharacterData.html#replaceData" target="right">replaceData</A>
+<BR>
+</SMALL><A href="DOM_Text.html" target="right">DOM_Text</A>
+<BR>
+<SMALL>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="DOM_Text.html#splitText" target="right">splitText</A>
+<BR>
+</SMALL>
+</BODY>
+</HTML>

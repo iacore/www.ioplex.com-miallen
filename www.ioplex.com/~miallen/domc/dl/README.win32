@@ -1,0 +1,26 @@
+INSTALLATION
+
+There are source and binary packages:
+
+  domc-0.6.9.zip     - zip archive of source
+  domc-0.6.9.bin.zip - Win32 domc.dll, domc.lib, domc_s.lib,...
+
+The .bin.zip provides domc.dll which can be placed in the PATH of 
+the program using it (probably C:\WINNT\system32). If you want to build
+the .DLL do:
+
+  > cd domc-0.6.9
+  > nmake -f Makefile.msvc
+
+To make the static .LIB just do:
+
+  > nmake -f Makefile.msvc domc.lib
+
+For i18n support you must install the encdec library:
+
+  http://www.ioplex.com/~miallen/encdec/
+
+This will enable you to properly convert UTF-8 input to whatever your
+locale codepage is. But there are limitations to encdec on Windows
+described in it's README.win32.
+

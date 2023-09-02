@@ -1,0 +1,23 @@
+INSTALLATION
+
+To run tcpsound on OSX you will need to install libSDL. You can get binary packages from libsdl.org or use Fink, Darwinports etc. Then you can either download the osx.bin.tar.gz binary package or compile from source. After you have installed libSDL install the binary with:
+
+$ tar -xvzf tcpsound-0.3.0.darwin.bin.tar.gz
+$ cd tcpsound-0.3.0
+$ sudo make -f Makefile.darwin install
+
+Or if you just want to listen to local traffic you can just do:
+
+$ sudo tcpsound
+
+--
+BUIDLING FROM SOURCE
+
+To build everything from source you need libSDL, libmba, and tcpsound source packeages.
+
+To build SDL I had to get the tar.gz and compile it from source doing './configure', 'make', and finally 'sudo make install' but if you have Fink or DarwinPorts installed that might be easier for you. The important thing is that the headers, sdl-config program, and other stuff are installed the UNIX way and not as a Framework. No xcode used here.
+
+To build libmba on OSX you need to remove -lutil from the so: target in the Makefile and do 'make' and 'sudo make install'.
+
+Then build tcpsound like 'make -f Makefile.darwin' and install it like 'sudo make -f Makefile.darwin install'.
+

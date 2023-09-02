@@ -1,0 +1,354 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<STYLE TYPE="text/css">
+		BODY {
+			background-color: f5f5f5;
+			font-family: verdana, arial; font-size: small;
+		}
+		H2, H3, A, .tfc {
+			color: #000080;
+			font-family: verdana, arial; font-size: small;
+		}
+		PRE { 
+		    font-family: monospace;
+		    border: 1px solid black;
+		    white-space: pre; 
+		    color: black;
+		    background-color: #dfdfdf; 
+		}
+		TABLE {
+			float: right;
+			border-collapse: collapse;
+			border-top: 1px solid #000000;
+			border-right: 1px solid #000000;
+			border-left: 1px solid #000000;
+		}
+		TH {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+		}
+		TD {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+			border-bottom: 1px solid #000000;
+			border-right: 1px solid #000000;
+		}
+	</STYLE>
+<TITLE>DOM_Node</TITLE>
+</HEAD>
+<BODY>
+<H2>3. DOM_Node</H2>
+<TABLE>
+<CAPTION>
+<B>Table 1. Values of nodeName, nodeValue, and attributes according to node type</B>
+</CAPTION>
+<tr>
+<th>Node Interface</th>
+<th>nodeName</th>
+<th>nodeValue</th>
+<th>nodeType</th>
+</tr>
+<tr>
+<td><tt>DOM_Attr</tt></td>
+<td>name of attribute</td>
+<td>value of attribute</td>
+<td><tt>DOM_ATTRIBUTE_NODE</tt></td>
+</tr>
+<tr>
+<td><tt>DOM_CDATASection</tt></td>
+<td><code>"#cdata-section"</code></td>
+<td>content of the CDATA Section</td>
+<td><tt>DOM_CDATA_SECTION_NODE</tt></td>
+</tr>
+<tr>
+<td><tt>DOM_Comment</tt></td>
+<td><code>"#comment"</code></td>
+<td>content of the comment</td>
+<td><tt>DOM_COMMENT_NODE</tt></td>
+</tr>
+<tr>
+<td><tt>DOM_Document</tt></td>
+<td><code>"#document"</code></td>
+<td><tt>NULL</tt></td>
+<td><tt>DOM_DOCUMENT_NODE</tt></td>
+</tr>
+<tr>
+<td><tt>DOM_DocumentFragment</tt></td>
+<td><code>"#document-fragment"</code></td>
+<td><tt>NULL</tt></td>
+<td><tt>DOM_DOCUMENT_FRAGMENT_NODE</tt></td>
+</tr>
+<tr>
+<td><tt>DOM_DocumentType</tt></td>
+<td>document type name</td>
+<td><tt>NULL</tt></td>
+<td><tt>DOM_DOCUMENT_TYPE_NODE</tt></td>
+</tr>
+<tr>
+<td><tt>DOM_Element</tt></td>
+<td>tag name</td>
+<td><tt>NULL</tt></td>
+<td><tt>DOM_ELEMENT_NODE</tt></td>
+</tr>
+<tr>
+<td><tt>DOM_Entity</tt></td>
+<td>entity name</td>
+<td><tt>NULL</tt></td>
+<td><tt>DOM_ENTITY_NODE</tt></td>
+</tr>
+<tr>
+<td><tt>DOM_EntityReference</tt></td>
+<td>name of entity referenced</td>
+<td><tt>NULL</tt></td>
+<td><tt>DOM_ENTITY_REFERENCE_NODE</tt></td>
+</tr>
+<tr>
+<td><tt>DOM_Notation</tt></td>
+<td>notation name</td>
+<td><tt>NULL</tt></td>
+<td><tt>DOM_NOTATION_NODE</tt></td>
+</tr>
+<tr>
+<td><tt>DOM_ProcessingInstruction</tt></td>
+<td>target</td>
+<td>content excluding target</td>
+<td><tt>DOM_PROCESSING_INSTRUCTION_NODE</tt></td>
+</tr>
+<tr>
+<td><tt>DOM_Text</tt></td>
+<td><code>"#text"</code></td>
+<td>content of the text node</td>
+<td><tt>DOM_TEXT_NODE</tt></td>
+</tr>
+</TABLE>
+
+The <tt>DOM_Node</tt> type is the primary datatype of the Document Object Model. Most of the other DOM interfaces inherit this interface. All <tt>DOM_Nodes</tt> have <tt>nodeName</tt>, <tt>nodeValue</tt>, and <tt>nodeType</tt> members. The vaules of these members depends on the node type. For example the <tt>DOM_Element</tt> node has a <tt>nodeValue</tt> corresponding to the tag name and a <tt>NULL</tt> <tt>nodeValue</tt>.
+<p>
+</p>
+Only the <tt>DOM_Element</tt> node type has attributes. All other node types have a <tt>NULL</tt> <tt>attributes</tt> member.
+Child nodes are accessable through the <tt>childNodes</tt> <tt>DOM_NodeList</tt> member and the <tt>firstChild</tt>, <tt>lastChild</tt>, <tt>previousSibling</tt>, and <tt>nextSibling</tt> members. Not all element types have child nodes.
+<br clear="right">
+<p>
+</p>
+In DOMC node inheritance is emulated with simple <tt>typedef</tt> statements and a <tt>union</tt> that contains all possible subclass attributes. To access a child interface specific attribute it may be necessary to access it through this union. For example the <tt>systemId</tt> of a notation node is currently only accessible through the <tt>union</tt> like:
+<PRE>
+
+  DOM_String *sysid;
+  ...
+  sysid = node-&gt;u.Notation.systemId;
+  </PRE>
+Care must be taken when modifing these union members (this is not well defined yet). Attributes accessible through the <tt>union</tt> that may need to be modified have helper methods to make this less awkward. The <tt>DOM_Node_setNodeValue</tt> function must be used to set the <tt>nodeValue</tt> member.
+<TABLE>
+<CAPTION>
+<B>Table 2. Functions to get and set certain node members</B>
+</CAPTION>
+<tr>
+<td><tt>DOM_Node_getNodeValue</tt></td><td>get <tt>nodeValue</tt> attribute</td>
+</tr>
+<tr>
+<td><tt>DOM_Node_setNodeValue</tt></td><td>set <tt>nodeValue</tt> and corresponding value in child interface</td>
+</tr>
+<tr>
+<td><tt>DOM_Document_getDoctype</tt></td><td>get the <tt>doctype</tt> node of the document</td>
+</tr>
+<tr>
+<td><tt>DOM_Document_getDocumentElement</tt></td><td>get the <tt>documentElement</tt> of the document</td>
+</tr>
+<tr>
+<td><tt>DOM_CharacterData_getLength</tt></td><td>get the <tt>length</tt> of a <tt>DOM_Text</tt>, <tt>DOM_Comment</tt>, <tt>DOM_CDATASection</tt>, or <tt>DOM_ProcessingInstruction</tt></td>
+</tr>
+</TABLE>
+<br clear="right">
+<p>
+</p>
+The all-important <tt>DOM_Node</tt> structure follows although some fields are left out in the interest of brevity. It may be necessary to look at this structure in the <tt>domc.h</tt> header.
+<PRE>
+
+  struct DOM_Node {
+  	DOM_String *nodeName;
+  	DOM_String *nodeValue;
+  	unsigned short nodeType;
+  	DOM_Node *parentNode;
+  	DOM_NodeList *childNodes;
+  	DOM_Node *firstChild;
+  	DOM_Node *lastChild;
+  	DOM_Node *previousSibling;
+  	DOM_Node *nextSibling;
+  	DOM_NamedNodeMap *attributes;
+  	DOM_Document *ownerDocument;
+  	union {
+  		struct {
+  			DOM_DocumentType *doctype;
+  			DOM_Element *documentElement;
+  			DOM_String *version;
+  			DOM_String *encoding;
+  			int standalone;
+  		} Document;
+  		struct {
+  			DOM_NamedNodeMap *entities;
+  			DOM_NamedNodeMap *notations;
+  			DOM_String *publicId;
+  			DOM_String *systemId;
+  			DOM_String *internalSubset;
+  		} DocumentType;
+  		struct {
+  			int specified;
+  			DOM_Element *ownerElement;
+  		} Attr;
+  		struct {
+  			int length;
+  		} CharacterData;
+  		struct {
+  			DOM_String *publicId;
+  			DOM_String *systemId;
+  		} Notation;
+  		struct {
+  			DOM_String *publicId;
+  			DOM_String *systemId;
+  			DOM_String *notationName;
+  		} Entity;
+  		struct {
+  			DOM_String *target;
+  			DOM_String *data;
+  		} ProcessingInstruction;
+  	} u;
+  };
+  </PRE>
+<H3>3.1. The DOM_Node functions</H3>
+<A name="insertBefore"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Node_insertBefore</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Node *DOM_Node_insertBefore(DOM_Node *this,
+           DOM_Node *newChild,
+           DOM_Node *refChild);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Node_insertBefore</tt> function inserts the node <tt>newChild</tt> into this node directly before the existing child <tt>refChild</tt>. If <tt>refChild</tt> is a null pointer, <tt>newChild</tt> will be appended to the list. If <tt>newChild</tt> is a <tt>DOM_DocumentFragment</tt> node, all children are moved into <tt>this</tt> node in the same order before <tt>refChild</tt>. If <tt>newChild</tt> is already in the list it will first be removed.
+<BR>
+<B>Returns</B>
+<BR>The <tt>DOM_Node_insertBefore</tt> function returns a pointer to the node that was inserted.<P>
+</P>
+<A name="replaceChild"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Node_replaceChild</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Node *DOM_Node_replaceChild(DOM_Node *this,
+           DOM_Node *newChild,
+           DOM_Node *oldChild);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+Replaces the child node <tt>oldChild</tt> with <tt>newChild</tt> in the list of children, and returns the <tt>oldChild</tt> node.<p>
+</p>
+If <tt>newChild</tt> is a <tt>DocumentFragment</tt> object, <tt>oldChild</tt> is replaced by all of the <tt>DocumentFragment</tt> children, which are inserted in the same order. If the <tt>newChild</tt> is already in the tree, it is first removed.
+<BR>
+<B>Returns</B>
+<BR>The node replaced.<P>
+</P>
+<A name="removeChild"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Node_removeChild</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Node *DOM_Node_removeChild(DOM_Node *this, DOM_Node *oldChild);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+Removes the child node indicated by <tt>oldChild</tt> from the list of children, and returns it.
+<BR>
+<B>Returns</B>
+<BR>The node removed.<P>
+</P>
+<A name="appendChild"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Node_appendChild</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Node *DOM_Node_appendChild(DOM_Node *this, DOM_Node *newChild);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Node_appendChild</tt> function appends <tt>newChild</tt> at the end of the <tt>childNodes</tt> list of <tt>this</tt> node. If <tt>newChild</tt> is already in the list, it is first removed.
+<BR>
+<B>Returns</B>
+<BR>The <tt>DOM_Node_appendChild</tt> function returns a pointer to <tt>newChild</tt> or a null pointer if the operation failed in which case <tt>DOM_Exception</tt> will be set appropriately.<P>
+</P>
+<A name="hasChildNodes"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Node_hasChildNodes</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  int DOM_Node_hasChildNodes(DOM_Node *this);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Node_hasChildNodes</tt> function returns 1 if <tt>this</tt> node contains children and 0 if <tt>this</tt> node does not support child nodes or currently does not have any child nodes.
+<BR>
+<P>
+</P>
+<A name="cloneNode"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Node_cloneNode</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_Node *DOM_Node_cloneNode(DOM_Node *this, int deep);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Node_cloneNode</tt> function creates a copy of <tt>this</tt> node. If the <tt>deep</tt> parameter is not 0 all children will be cloned as well. The cloned node's <tt>parentNode</tt> pointer is <tt>NULL</tt>. Cloning a <tt>DOM_Element</tt> node copies all attributes regardless of what the <tt>deep</tt> parameter is. It is possibly to clone every node type with DOMC whereas the W3C specifications do not require cloning <tt>DOM_Document</tt>, <tt>DOM_DocumentType</tt>, <tt>DOM_Entity</tt>, and <tt>DOM_Notation</tt> nodes.
+<p>
+</p>
+The DOM specification requires that cloning an attribute node directly will return a specified attribute opposed to an attribute resulting from a default value specified in the DTD. Currently DOMC does not consider DTD default values. The value of <tt>attr-&gt;u.Attr.specified</tt> will always be 0.
+<BR>
+<B>Returns</B>
+<BR>The <tt>DOM_Node_cloneNode</tt> function returns the new cloned node or a null pointer if the operation failed in whhich case <tt>DOM_Exception</tt> will be set appropriately.<P>
+</P>
+<A name="normalize"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_Node_normalize</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  void DOM_Node_normalize(DOM_Node *this);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_Node_normalize</tt> function merges adjecent <tt>DOM_Text</tt> node content into "normal" form in the subtree of <tt>this</tt> node. Empty <tt>DOM_Text</tt> nodes will also be removed. When a document is first loaded it is in "normal" form.
+<BR>
+<P>
+</P>
+<HR NOSHADE>
+	Copyright 2003 Michael B. Allen &lt;mballen@erols.com&gt;
+	Generated by CStyleX 0.1.1
+</BODY>
+</HTML>

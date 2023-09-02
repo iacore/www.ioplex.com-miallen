@@ -1,0 +1,78 @@
+<interface name="cfg"
+	short="persistent configuration properties interface">
+
+<comments>
+	Copyright 2002 Michael B. Allen &lt;mballen@erols.com&gt;
+</comments>
+
+<include>mba/cfg.h</include>
+
+<title>Cfg</title>
+<desc>
+The <def>cfg</def>(3m) module provides an interface to ...
+<pre>
+</pre>
+</desc>
+
+<group>
+<title>The <ident>cfg</ident> structure</title>
+<code>
+	<title>The <ident></ident> structure</title>
+<pre>
+struct cfg {
+	struct linkedlist *list;
+};
+</pre>
+	<desc>
+The <ident>cfg</ident> structure is ...
+	</desc>
+</code>
+</group>
+
+<group>
+<title>Memory management functions</title>
+<desc>These functions should be used to create and destroy <def>cfg</def> objects.</desc>
+<meth name="new">
+	<pre>struct cfg *cfg_new(void);</pre>
+	<desc>
+Return a new <ident>cfg</ident> object with no properties.
+	</desc>
+</meth>
+<meth name="del">
+	<pre>void cfg_del(void *this);</pre>
+	<param name="this"/>
+	<desc>
+Deallocate the <ident>cfg</ident> object and all properties within.
+	</desc>
+</meth>
+</group>
+
+<group>
+<title>Load and store functions</title>
+<meth name="load">
+	<pre>int cfg_load(struct cfg *this, const char *filename);</pre>
+	<param name="this"/>
+	<param name="filename"/>
+	<desc>
+The <ident>cfg_load</ident> function ...
+	</desc>
+	<ret>
+The <ident>cfg_load</ident> function ...
+	</ret>
+</meth>
+<meth name="set_str">
+	<pre>int cfg_set_str(struct cfg *this, const char *src, int sn, const char *name);</pre>
+	<param name="this"/>
+	<param name="src"/>
+	<param name="sn"/>
+	<param name="name"/>
+	<desc>
+The <ident>cfg_set_str</ident> function ...
+	</desc>
+	<ret>
+The <ident>cfg_set_str</ident> function ...
+	</ret>
+</meth>
+</group>
+
+</interface>

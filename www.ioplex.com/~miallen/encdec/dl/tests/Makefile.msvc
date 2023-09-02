@@ -1,0 +1,15 @@
+!include <win32.mak>
+EXES=t0encdec.exe t1encdec.exe t2encdec.exe t3encdec.exe
+OBJS=t0encdec.obj t1encdec.obj t2encdec.obj t3encdec.obj
+
+all: $(OBJS) $(EXES)
+
+.obj.exe:
+	$(link) /LIBPATH:.. encdec.lib -out:$@ $*.obj
+
+.c.obj:
+	$(cc) $(cflags) /I..\src /Fo$@ $*.c
+
+clean:
+	del $(OBJS) $(EXES)
+

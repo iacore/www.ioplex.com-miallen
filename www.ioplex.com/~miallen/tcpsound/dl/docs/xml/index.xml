@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<proj>
+
+<title>tcpsound</title>
+<short>Play sounds in response to network traffic</short>
+<desc>
+The <ident>tcpsound</ident>(1) utility will play sounds in response to network traffic permitting a user to literally listen to a network. Specifically <ident>tcpsound</ident> forks a pseudo terminal in which to run <ident>tcpdump</ident>(8), parses that output, and plays a wide variety of user configuable sounds. Interpreting the output of <ident>tcpdump</ident> in a pty permits <ident>tcpsound</ident> to first <ident>ssh</ident>(1) to a remote host if desired.
+<h3>Requirements</h3>
+To install <ident>tcpsound</ident> you will need <ident>tcpdump</ident>(8) on the machine on which you will be capturing packets. On the local machine (where you will be playing the sounds of those packets) the libsdl sound library and unless you're using the OSX binary package <a href="http://www.ioplex.com/~miallen/libmba/">libmba-0.9.1</a> or later is required. Libsdl is fairly standard on Linux machines but you may need to install development packages (specifially SDL-devel and SDL_mixer-devel for my RH 7.3 machine). For OSX I built the source package from libsdl.org.
+<h3>Running</h3>
+Provided the above requirements have been met, the sound is working properly on the local machine, and the user has root access on both the target machine (to capture packets in promiscuous mode) and local machine (to access the sound device), a typical commandline for <ident>tcpsound</ident> is:
+<pre>
+
+  # tcpsound -r myserver.com ! port ssh
+
+</pre>
+This will <ident>forkpty</ident>(3), ssh to <tt>myserver.com</tt>, run <tt>tcpdump -nn ! port ssh</tt> (note the <tt>! port ssh</tt> filter is important so you're not listening to yourself) and interpret the output playing sounds defined in the <tt>/root/.tcpsound</tt> config. Adjust the configuration file to associate different WAV files with incoming or outgoing traffic on specific ports. See the <ident>tcpsound</ident>(1) man page for details.
+<h3>Mac OSX Binary</h3>
+A binary package for Mac OSX has also been prepared. This package does not need libmba but it does need libSDL. Install libSDL first. Then to install tcpsound and run as follows: 
+<pre>
+$ tar -xvzf tcpsound-0.3.1.darwin.bin.tar.gz
+$ cd tcpsound-0.3.1
+$ sudo make -f Makefile.darwin install
+$ sudo tcpsound -r myserver ! port ssh
+</pre>
+</desc>
+<links>
+
+<a href="dl/">Download</a>
+<a href="dl/src/">Browse The Source</a>
+
+</links>
+<news>
+
+<!-- entry>
+<title></title>
+<sub></sub>
+<desc></desc>
+</entry-->
+
+<entry>
+<title>tcpsound-0.3.1 released</title>
+<sub>Mon Sep 5, 2005</sub>
+<desc>
+A small build fix has been applied.
+</desc>
+</entry>
+
+<entry>
+<title>tcpsound-0.3.0 released</title>
+<sub>Fri Apr 29, 2005</sub>
+<desc>
+This release has been updated to build cleanly with the latest libmba and an OSX binary has been prepared.
+</desc>
+</entry>
+
+<entry>
+<title>tcpsound-0.2.3 released</title>
+<sub>Wed May 26, 2004</sub>
+<desc>
+Some logic that tried to compensate for delays in SSH has been removed. It just didn't work that well. Sounds are now played as soon as packets are read from the SSH session.
+<p/>
+Also included is a more elaborate configuration. If you have KDE (it makes use of some KDE WAVs in <tt>/usr/share/sounds/</tt>) try it out.
+</desc>
+</entry>
+
+<entry>
+<title>tcpsound-0.2.2 released</title>
+<sub>Fri May 22, 2004</sub>
+<desc>
+Fixed some Makefile proper and added support for ICMP. Still don't have a really <i>clear</i> sonar "ping" sound. I think a high key on the piano with some heavy reverb would do it though.
+</desc>
+</entry>
+
+<entry>
+<title>tcpsound-0.2.1 released</title>
+<sub>Fri May 21, 2004</sub>
+<desc>
+Initial release. If anyone has a good clean sonar "ping" WAV for ICMP echos please send it to me!
+</desc>
+</entry>
+
+</news>
+</proj>
+

@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<STYLE TYPE="text/css">
+		BODY {
+			background-color: #e0e0e0;
+		}
+		H1 {
+			font-family: verdana, arial;
+			font-size: normal;
+			color: #000000;
+		}
+		H2 {
+			font-family: verdana, arial;
+			font-size: normal;
+			color: #000000;
+		}
+		H3 {
+			font-family: verdana, arial;
+			font-size: small;
+			color: #404040;
+		}
+		A {
+			color: #404040;
+			font-weight: bold;
+		}
+		BIG {
+			color: #404040;
+			font-weight: bold;
+			font-size: 50px;
+		}
+		EM {
+			color: #404040;
+			font-family: Times New Roman;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		PRE {
+		    font-family: monospaced, courier;
+		    border: 1px lightgrey dotted;
+		    white-space: pre; 
+		    color: black;
+			padding: 4px;
+		    background-color: #e0e0e0; 
+		}
+		TABLE {
+			border-collapse: collapse;
+		}
+		TH, TD {
+			font-family: verdana, arial;
+			font-size: small;
+		}
+		.mainpane {
+			background-color: #f0f0f0;
+			padding: 10px;
+		}
+		.leftpane {
+			background-color: #f0f0f0;
+			padding: 10px;
+		}
+		.middlepane {
+			background-color: #f0f0f0;
+			padding: 10px;
+		}
+		.footer {
+			background-color: #e0e0e0;
+		}
+	</STYLE>
+<TITLE>tcpsound</TITLE>
+</HEAD>
+<BODY>
+<TABLE>
+<TR>
+<TD colspan="2" class="mainpane"><BIG>tcpsound</BIG>
+<BR>
+<b>Play sounds in response to network traffic</b>
+<P>
+</P>
+The <I>tcpsound</I>(1) utility will play sounds in response to network traffic permitting a user to literally listen to a network. Specifically <I>tcpsound</I> forks a pseudo terminal in which to run <I>tcpdump</I>(8), parses that output, and plays a wide variety of user configuable sounds. Interpreting the output of <I>tcpdump</I> in a pty permits <I>tcpsound</I> to first <I>ssh</I>(1) to a remote host if desired.
+<h3>Requirements</h3>
+To install <I>tcpsound</I> you will need <I>tcpdump</I>(8) on the machine on which you will be capturing packets. On the local machine (where you will be playing the sounds of those packets) the libsdl sound library and unless you're using the OSX binary package <a href="../libmba/index.html">libmba-0.9.1</a> or later is required. Libsdl is fairly standard on Linux machines but you may need to install development packages (specifially SDL-devel and SDL_mixer-devel for my RH 7.3 machine). For OSX I built the source package from libsdl.org.
+<h3>Running</h3>
+Provided the above requirements have been met, the sound is working properly on the local machine, and the user has root access on both the target machine (to capture packets in promiscuous mode) and local machine (to access the sound device), a typical commandline for <I>tcpsound</I> is:
+<pre>
+
+  # tcpsound -r myserver.com ! port ssh
+
+</pre>
+This will <I>forkpty</I>(3), ssh to <tt>myserver.com</tt>, run <tt>tcpdump -nn ! port ssh</tt> (note the <tt>! port ssh</tt> filter is important so you're not listening to yourself) and interpret the output playing sounds defined in the <tt>/root/.tcpsound</tt> config. Adjust the configuration file to associate different WAV files with incoming or outgoing traffic on specific ports. See the <I>tcpsound</I>(1) man page for details.
+<h3>Mac OSX Binary</h3>
+A binary package for Mac OSX has also been prepared. This package does not need libmba but it does need libSDL. Install libSDL first. Then to install tcpsound and run as follows: 
+<pre>
+$ tar -xvzf tcpsound-0.3.1.darwin.bin.tar.gz
+$ cd tcpsound-0.3.1
+$ sudo make -f Makefile.darwin install
+$ sudo tcpsound -r myserver ! port ssh
+</pre>
+<P>
+</P>
+</TD>
+</TR>
+<TR>
+<TD valign="top" width="250" class="leftpane">
+<h1>Links</h1>
+<a href="dl/index.html">Download</a>
+<br>
+<a href="dl/src/index.html">Browse The Source</a>
+<br>
+</TD><TD valign="top" class="middlepane">
+<h1>News</h1>
+<EM>tcpsound-0.3.1 released</EM>
+<BR>
+<SMALL>Mon Sep 5, 2005</SMALL>
+<BR>
+A small build fix has been applied.
+<BR>
+<EM>tcpsound-0.3.0 released</EM>
+<BR>
+<SMALL>Fri Apr 29, 2005</SMALL>
+<BR>
+This release has been updated to build cleanly with the latest libmba and an OSX binary has been prepared.
+<BR>
+<EM>tcpsound-0.2.3 released</EM>
+<BR>
+<SMALL>Wed May 26, 2004</SMALL>
+<BR>
+Some logic that tried to compensate for delays in SSH has been removed. It just didn't work that well. Sounds are now played as soon as packets are read from the SSH session.
+<p>
+</p>
+Also included is a more elaborate configuration. If you have KDE (it makes use of some KDE WAVs in <tt>/usr/share/sounds/</tt>) try it out.
+<BR>
+<EM>tcpsound-0.2.2 released</EM>
+<BR>
+<SMALL>Fri May 22, 2004</SMALL>
+<BR>
+Fixed some Makefile proper and added support for ICMP. Still don't have a really <i>clear</i> sonar "ping" sound. I think a high key on the piano with some heavy reverb would do it though.
+<BR>
+<EM>tcpsound-0.2.1 released</EM>
+<BR>
+<SMALL>Fri May 21, 2004</SMALL>
+<BR>
+Initial release. If anyone has a good clean sonar "ping" WAV for ICMP echos please send it to me!
+<BR>
+<P>
+</P>
+</TD>
+</TR>
+<TR>
+<TD colspan="2" class="footer">
+<hr noshade>
+<small>
+		Last updated Sep 5, 2005<BR>tcpsound-0.3.1<BR>
+		API documentation and website generated with <a href="../cstylex" style="color: black;">CSytleX</a>
+<BR>
+		Copyright © 2004 Michael B Allen &lt;mba2000 ioplex.com&gt;<BR>
+<a href="http://validator.w3.org/check/referer" style="color: black;">validate this page</a></small></TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>

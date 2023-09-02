@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<STYLE TYPE="text/css">
+		BODY {
+			background-color: f5f5f5;
+			font-family: verdana, arial; font-size: small;
+		}
+		H2, H3, .tfc {
+			font-family: verdana, arial; font-size: small;
+			color: #000080;
+		}
+		A {
+			color: #000080;
+			font-weight: bold;
+		}
+		PRE { 
+		    font-family: monospaced, courier;
+		    border: 1px solid black;
+		    white-space: pre; 
+		    color: black;
+		    background-color: #dfdfdf; 
+		}
+		TABLE {
+			float: right;
+			border-collapse: collapse;
+			border-top: 1px solid #000000;
+			border-right: 1px solid #000000;
+		}
+		TH, TD {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+			border-bottom: 1px solid #000000;
+			border-left: 1px solid #000000;
+		}
+	</STYLE>
+<TITLE>encdec &lt;encdec.h&gt;</TITLE>
+</HEAD>
+<BODY>
+<H2>Index</H2>
+<A HREF="overview.html" TARGET="right">Overview</A>
+<BR>
+<A href="encdec.html" target="right">Encdec</A>
+<BR>
+<SMALL>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#" target="right">The FLD macro</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_uint16be" target="right">enc_uint16be</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_uint32be" target="right">enc_uint32be</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_uint64be" target="right">enc_uint64be</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_uint16le" target="right">enc_uint16le</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_uint32le" target="right">enc_uint32le</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_uint64le" target="right">enc_uint64le</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_uint16be" target="right">dec_uint16be</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_uint32be" target="right">dec_uint32be</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_uint64be" target="right">dec_uint64be</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_uint16le" target="right">dec_uint16le</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_uint32le" target="right">dec_uint32le</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_uint64le" target="right">dec_uint64le</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_time" target="right">enc_time</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_time" target="right">dec_time</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_floatle" target="right">enc_floatle</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_doublele" target="right">enc_doublele</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_floatbe" target="right">enc_floatbe</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_doublebe" target="right">enc_doublebe</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_floatle" target="right">dec_floatle</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_doublele" target="right">dec_doublele</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_floatbe" target="right">dec_floatbe</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_doublebe" target="right">dec_doublebe</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_mbsncpy" target="right">enc_mbsncpy</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#enc_mbscpy" target="right">enc_mbscpy</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_mbsncpy" target="right">dec_mbsncpy</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_mbscpy" target="right">dec_mbscpy</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_mbsndup" target="right">dec_mbsndup</A>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<A href="encdec.html#dec_mbsdup" target="right">dec_mbsdup</A>
+<BR>
+</SMALL>
+</BODY>
+</HTML>

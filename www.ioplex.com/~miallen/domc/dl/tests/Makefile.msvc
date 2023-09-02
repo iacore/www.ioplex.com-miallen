@@ -1,0 +1,18 @@
+# Compile domc test programs.
+
+!include <win32.mak>
+LIBMBA=..\..\libmba-0.4.5
+OBJS=d3.obj e0.obj e3.obj
+EXES=d3.exe e0.exe e3.exe
+
+all: $(OBJS) $(EXES)
+
+.obj.exe:
+	$(link) /LIBPATH:.. /LIBPATH:$(LIBMBA) domc.lib libmba.lib -out:$@ $*.obj
+
+.c.obj:
+	$(cc) /DMSGNO $(cflags) /I..\src /I$(LIBMBA)\src /Fo$@ $*.c
+
+clean:
+	del $(OBJS) $(EXES)
+

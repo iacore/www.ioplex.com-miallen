@@ -1,0 +1,19 @@
+!include <win32.mak>
+LIBICONV=..\libiconv-1.7
+CFLAGS=/I$(LIBICONV)\include /I$(LIBICONV)\lib -MD -W1 -GD -D_NDEBUG -O1 -DBUILDING_LIBICONV
+
+encdec.dll: src\encdec.c src\wcwidth.c src\encdec_iconv.c
+	$(cc) $(CFLAGS) -c -Fosrc\encdec.obj src\encdec.c
+	$(cc) $(CFLAGS) -c -Fosrc\wcwidth.obj src\wcwidth.c
+	$(cc) $(CFLAGS) -c -Fosrc\encdec_iconv.obj src\encdec_iconv.c
+	$(link) /INCREMENTAL:NO /NOLOGO /DEF:encdec.def -entry:_DllMainCRTStartup@12 -dll src\encdec.obj src\wcwidth.obj src\encdec_iconv.obj $(LIBICONV)\libcharset\lib\localcharset.obj
+
+encdec.lib: src\encdec.c src\wcwidth.c src\encdec_iconv.c
+	$(cc) -c /Fosrc\encdec.obj src\encdec.c
+	$(cc) -c /Fosrc\wcwidth.obj src\wcwidth.c
+	$(cc) -c /I$(LIBICONV)\include /I$(LIBICONV)\lib /I$(LIBICONV)\libcharset\lib /Fosrc\encdec_iconv.obj src\encdec_iconv.c
+	$(implib) -machine:$(CPU) -out:encdec.lib src\encdec.obj src\wcwidth.obj src\encdec_iconv.obj $(LIBICONV)\libcharset\lib\localcharset.obj
+
+clean:
+	del encdec.dll encdec.lib encdec.exp src\encdec.obj src\wcwidth.obj src\encdec_iconv.obj
+

@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<STYLE TYPE="text/css">
+		BODY {
+			background-color: f5f5f5;
+			font-family: verdana, arial; font-size: small;
+		}
+		H2, H3, A, .tfc {
+			color: #000080;
+			font-family: verdana, arial; font-size: small;
+		}
+		PRE { 
+		    font-family: monospace;
+		    border: 1px solid black;
+		    white-space: pre; 
+		    color: black;
+		    background-color: #dfdfdf; 
+		}
+		TABLE {
+			float: right;
+			border-collapse: collapse;
+			border-top: 1px solid #000000;
+			border-right: 1px solid #000000;
+			border-left: 1px solid #000000;
+		}
+		TH {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+		}
+		TD {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+			border-bottom: 1px solid #000000;
+			border-right: 1px solid #000000;
+		}
+	</STYLE>
+<TITLE>DOM_CharacterData</TITLE>
+</HEAD>
+<BODY>
+<H2>7. DOM_CharacterData</H2>
+The <tt>DOM_CharacterData</tt> interface provides some basic text manipulation functions for the <tt>DOM_Text</tt>, <tt>DOM_Comment</tt>, and <tt>DOM_CDATASection</tt> nodes. <tt>DOM_CharacterData</tt> nodes cannot be instatiated directly.
+<p>
+</p>
+Currently all of these functions set <tt>DOM_Exception</tt> if an error occurs however there is no return value to detect the error event. A future version of <tt>DOMC</tt> will likely return a value that indicates that an error has occured.
+<p>
+</p>
+<i>DOM specifications require that character data is UTF-16 encoded. DOMC does not support UTF-16. The locale dependant 8 bit encoding is used instead. This permits common <tt>char *</tt> strings to be used in place of <tt>DOM_String *</tt>. Many UNIX and Linux systems support the UTF-8 locale. If a DOMC program is running in a UTF-8 locale the offsets of these string operations refer to characters rather than bytes or individual multibyte sequences. Thus the behavior of these functions should be very similar or identical to that of a DOM implementation that uses UTF-16. Also note that UTF-8 support may be disabled for the sake of installation simplicity. It may be necessary to obtain the source code and rebuild DOMC if i18n support is required.</i>
+<H3>7.1. The DOM_CharacterData functions</H3>
+These functions should be used to edit the character data content of <tt>DOM_Text</tt>, <tt>DOM_Comment</tt>, and <tt>DOM_CDATASection</tt> nodes.
+<A name="getLength"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_CharacterData_getLength</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  void DOM_CharacterData_deleteData(DOM_CharacterData *this);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_CharacterData_getLength</tt> function returns the number of characters represented in this character data node.
+<BR>
+<P>
+</P>
+<A name="substringData"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_CharacterData_substringData</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  DOM_String *DOM_CharacterData_substringData(DOM_CharacterData *this,
+           int offset,
+           int count);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_CharacterData_substringData</tt> function returns a pointer to a string representing the substring beginning at the character at <tt>offset</tt> with a length of <tt>count</tt>.
+If the sum off <tt>offset</tt> and <tt>count</tt> exceeds the length of the character data, a string representing the remainder of the string is returned.
+Memory for the string is allocated with <tt>malloc</tt>(3) and may be freed with <tt>free</tt>(3).
+If the <tt>offset</tt> parameter is out of range <tt>DOM_Exception</tt> will be set to <tt>DOM_INDEX_SIZE_ERR</tt>.
+<BR>
+<P>
+</P>
+<A name="appendData"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_CharacterData_appendData</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  void DOM_CharacterData_appendData(DOM_CharacterData *this, DOM_String *arg);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_CharacterData_appendData</tt> function appends the string <tt>arg</tt> to this character data node.
+<BR>
+<P>
+</P>
+<A name="insertData"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_CharacterData_insertData</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  void DOM_CharacterData_insertData(DOM_CharacterData *this,
+           int offset,
+           DOM_String *arg);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_CharacterData_insertData</tt> function inserts the string <tt>arg</tt> into this character data at <tt>offset</tt>.
+If the <tt>offset</tt> parameter is out of range <tt>DOM_Exception</tt> will be set to <tt>DOM_INDEX_SIZE_ERR</tt>.
+<BR>
+<P>
+</P>
+<A name="deleteData"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_CharacterData_deleteData</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  void DOM_CharacterData_deleteData(DOM_CharacterData *this,
+           int offset,
+           int count);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_CharacterData_deleteData</tt> function removes at most <tt>count</tt> characters at <tt>offset</tt> from the underlying string of this character data node. The resulting ends are concatonated together into one string.
+If the sum off <tt>offset</tt> and <tt>count</tt> exceeds the length of the character data, the resulting string will end at <tt>offset</tt>.
+If the <tt>offset</tt> parameter is out of range <tt>DOM_Exception</tt> will be set to <tt>DOM_INDEX_SIZE_ERR</tt>.
+<BR>
+<P>
+</P>
+<A name="replaceData"></A>
+<P>
+</P>
+<B CLASS="tfc">The <TT>DOM_CharacterData_replaceData</TT> function</B>
+<BR>
+<B>Synopsis</B>
+<PRE>
+<BR>  #include &lt;domc.h&gt;
+  void DOM_CharacterData_replaceData(DOM_CharacterData *this,
+           int offset,
+           int count,
+           DOM_String *arg);<BR>
+</PRE>
+<B>Description</B>
+<BR>
+The <tt>DOM_CharacterData_replaceData</tt> function removes the character data at <tt>offset</tt> for <tt>count</tt> characters and inserts the string <tt>arg</tt> in it's place.
+If the sum off <tt>offset</tt> and <tt>count</tt> exceeds the length of the character data, a string representing the remainder of the string is returned.
+If the <tt>offset</tt> parameter is out of range <tt>DOM_Exception</tt> will be set to <tt>DOM_INDEX_SIZE_ERR</tt>.
+<BR>
+<P>
+</P>
+<HR NOSHADE>
+	Copyright 2003 Michael B. Allen &lt;mballen@erols.com&gt;
+	Generated by CStyleX 0.1.1
+</BODY>
+</HTML>

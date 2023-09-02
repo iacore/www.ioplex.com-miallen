@@ -1,0 +1,8 @@
+[miallen@miallen3 tests]$ ./err.o err.xml 
+DOCTYPE err [
+ENTITY E
+ELEMENT employeeId
+]
+Error parsing external entity: undefined entity
+Failure
+<err>

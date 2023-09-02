@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zsvr ver="1.1">
+    <!-- This is a comment -->
+    <net laddr="192.168.1.15"
+        timeout="15000"
+        port="1444"/>
+    <users> 
+        This is some text
+        <user id="mba"
+				auth="nis.o">nis.foo.net:9812:fretos</user>
+        <user id="gchan"/>
+<!-- These strings require the encdec library -->
+		<user id="Schwäbisch"
+				auth="I kå Glas frässa, ond des macht mr nix!"/>
+		<user id="Lëtzebuergescht">mir nët wei</user>
+		<user id="Macedonian">Можам да јадам стакло, а н</user>
+	</users>
+</zsvr>

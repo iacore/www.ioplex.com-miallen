@@ -1,0 +1,129 @@
+Namespaces are not supported at all.
+
+DOMImplementation.hasFeature, Document.importNode, and Document.getElementById are not implemented
+
+DOM_Implementation needs to accept a context object. It's not a static interface.
+
+Write a tutorial.
+
+A good test is to return a clone of the document when returning the tree
+from load() in the test suite.
+
+Use XML_SetDefaultHandler to not expand entity references so that:
+ o It can be know whether or not an attribute is specified
+ o An attribute with a default value cannot be set (readonly)
+ o Removing an attribute will be replaced by a default value
+ o Content of an attribute used to construct a tree?
+
+There are no setXxx and getXxx methods for attribute values. You cannot
+set like:
+
+  attr->u.Attr.value = "Yes";
+
+This would need to be written as follows:
+
+  free(attr->nodeValue);
+  attr->nodeValue = attr->u.Attr.value = strdup("Yes");
+
+Make abbriviated typedefs?:
+
+dnode *dnode_insert(dnode *node, dnode *newchild, dnode *refchild);
+dnode *dnode_replace(dnode *node, dnode *newchild, dnode *oldchild);
+
+dnode *dnnmap_get(const dnnmap *map, const char *name);
+dnode *dnnmap_remove(dnnmap *map, const char *name);
+
+char *delem_getattr(const delem *elem, const char *name);
+
+void domcdata_replace(domcdata *cdata, int off, int count, const char *arg);
+
+Are the ->u.Attr.value and ->u.CharacterData.data sort of attributes
+really necessary when this information is available through the
+->nodeValue member?
+
+WHAT FAILS THE DOM CONFORMANCE TESTS?
+
+DOMC does not instruct Expat to not expand entity references. So there
+will be no EntityReferences in the tree.
+
+No check for "invalid characters" is performed.
+
+There are no exceptions in C. Instead the errno-like DOM_Exception is
+used to convey an error code. The only problem is that it may not be
+possible to return a value from some functions that indicate an error
+has occured. For example consider the setNamedItem function:
+
+  DOM_Node *DOM_NamedNodeMap_setNamedItem(DOM_NamedNodeMap *map, DOM_Node *arg);
+
+This returns the node being replaced unless there is no such node (a
+likey situation) in which case NULL is returned. So there is really no
+way to determine when an exception has occured and yet this method may
+throw the DOM_WRONG_DOCUMENT_ERR, DOM_NO_MODIFICATION_ALLOWED_ERR, and
+DOM_INUSE_ATTRIBUTE_ERR exceptions. Considering a library function should
+never set an error code like DOM_Exception to 0 the only way to determine
+with certainty that an error has occured is to set DOM_Exception to 0
+and test it after the call. This type of interface (no explicit error
+indication) is flawed so at some point it will have to change (or a
+function will be added) to accept a DOM_Node ** value-result parameter
+for the displaced node.
+
+These 477 checks are from a DOMTS CVS checkout from Jan 2003
+
+Running suite(s): Level1
+93%: Checks: 477, Failures: 24, Errors: 8
+attrcreatetextnode.h:55:F:Core: nodeValue
+hc_attrcreatetextnode.h:54:F:Core: nodeValue
+
+  The expat module expands entities by default. Parsing external entities will be explored in a future version of DOMC.
+
+attrnotspecifiedvalue.h:52:F:Core: attrNotSpecifiedValueAssert
+attrspecifiedvalueremove.h:42:E:Core: (after this point) Received signal 11
+namednodemapremovenameditem.h:40:E:Core: (after this point) Received signal 11
+
+  Default attributes are expanded by the expat module and may be freely modified. Therefore the specified member of DOM_Attr will always be true. Correct handling of DTD elements will be explored in a future version of DOMC. They are loaded into the doctype element though.
+
+attrsetvaluenomodificationallowederrEE.h:41:E:Core: (after this point) Received signal 11
+
+  The expat module expands entities by default so there is no tree to associate with a newly created entity reference. Parsing external entities will be explored in a future version of DOMC.
+
+attrspecifiedvalueremove.h:42:E:Core: (after this point) Received signal 11
+elementremoveattribute.h:51:F:Core: elementRemoveAttributeAssert
+elementremoveattributerestoredefaultvalue.h:52:F:Core: elementRemoveAttributeRestoreDefaultValueAssert
+namednodemapremovenameditemgetvalue.h:42:E:Core: (after this point) Received signal 11
+documentcreateelementdefaultattr.h:40:E:Core: (after this point) Received signal 11
+namednodemapremovenameditem.h:40:E:Core: (after this point) Received signal 11
+
+  DTD default values are not supported. They will be expanded by expat however removing one will not restore the default value.
+
+characterdatasetdatanomodificationallowederrEE.h:38:E:Core: (after this point) Received signal 11
+elementremoveattributenodenomodificationallowederrEE.h:40:E:Core: (after this point) Received signal 11
+elementremoveattributenomodificationallowederrEE.h:57:F:Core: throw_NO_MODIFICATION_ALLOWED_ERR
+elementsetattributenomodificationallowederrEE.h:56:F:Core: throw_NO_MODIFICATION_ALLOWED_ERR
+nodeappendchildnomodificationallowederrEE.h:49:F:Core: throw_NO_MODIFICATION_ALLOWED_ERR
+nodeinsertbeforenomodificationallowederrEE.h:51:F:Core: throw_NO_MODIFICATION_ALLOWED_ERR
+processinginstructionsetdatanomodificationallowederrEE.h:41:E:Core: (after this point) Received signal 11
+
+  The expat module expands entities by default so the underlying tree is not read only. Currently no nodes are ever read only. In a future version of DOMC read-only entity references will correctly be spiced into the result tree rather than being espanded by the parser.
+
+documentcreateentityreferenceknown.h:51:F:Core: size
+
+  Again, the expat module expands entities by default so there is no tree to associate with a newly created entity reference. Parsing external entities will be explored in a future version of DOMC.
+
+documentinvalidcharacterexceptioncreateattribute.h:47:F:Core: documentInvalidCharacterExceptionCreateAttributeAssert
+documentinvalidcharacterexceptioncreateelement.h:47:F:Core: documentInvalidCharacterExceptionCreateElementAssert
+documentinvalidcharacterexceptioncreateentref.h:46:F:Core: documentInvalidCharacterExceptionCreateEntRefAssert
+documentinvalidcharacterexceptioncreatepi.h:47:F:Core: documentInvalidCharacterExceptionCreatePIAssert
+elementinvalidcharacterexception.h:56:F:Core: elementInvalidCharacterExceptionAssert
+hc_documentinvalidcharacterexceptioncreateattribute.h:46:F:Core: documentInvalidCharacterExceptionCreateAttributeAssert
+hc_documentinvalidcharacterexceptioncreateelement.h:46:F:Core: documentInvalidCharacterExceptionCreateElementAssert
+hc_elementinvalidcharacterexception.h:55:F:Core: elementInvalidCharacterExceptionAssert
+
+  Invalid characters are not checked.
+
+nodeentitynodevalue.h:48:F:Core: nodeEntityNodeValueAssert1
+nodeentitysetnodevalue.h:51:F:Core: nodeValueNull
+nodevalue07.h:43:F:Core: initiallyNull
+hc_nodevalue07.h:43:F:Core: initiallyNull
+
+  Because external entities are parsed automatically by the expat module currently the associated text in the entity declaration is left unparsed so the nodeValue is used to hold it. So this is just wrong. The nodeValue should be NULL. In a future version external entities will be handled properly and the nodeValue for entities will be NULL.
+

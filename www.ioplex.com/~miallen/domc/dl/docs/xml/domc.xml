@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE library [
+	<!ENTITY DOM_CharacterData SYSTEM "DOM_CharacterData.xml">
+	<!ENTITY DOM_Document SYSTEM "DOM_Document.xml">
+	<!ENTITY DOM_Implementation SYSTEM "DOM_Implementation.xml">
+	<!ENTITY DOM_Element SYSTEM "DOM_Element.xml">
+	<!ENTITY DOM_NamedNodeMap SYSTEM "DOM_NamedNodeMap.xml">
+	<!ENTITY DOM_NodeList SYSTEM "DOM_NodeList.xml">
+	<!ENTITY DOM_Node SYSTEM "DOM_Node.xml">
+	<!ENTITY DOM_Text SYSTEM "DOM_Text.xml">
+]>
+
+<library name="libmba">
+	<title>DOMC &lt;domc.h&gt;</title>
+	<desc>
+ DOMC is a light weight C implementation of the DOM as specified in the W3C Document Object Model Level 1, Level 2, and Level 2 Events recommendations. The DOM is a popular API for manipulating XML and HTML documents as a tree of nodes in memory. It is the more sophisticated but more memory constraining alternative to the SAX API.
+<p/>
+<i>This implementation is not W3C compliant</i> because it lacks support for namespace functionality, entity references, DOCTYPE nodes, DTD default attribute values, and other peripheral functionality. The DOM_Node type and it's associated operations should work well however because what functionality is supported has been tested thoroughly.
+<p/>
+The definitive information on the DOM is the collection of W3C recommendations which can be found at the below locations:
+<ul>
+<li><a href="http://www.w3.org/DOM/DOMTR" target="_top">http://www.w3.org/DOM/DOMTR</a></li>
+<li><a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html" target="_top">http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html</a></li>
+<li><a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113/events.html" target="_top">http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113/events.html</a></li>
+</ul>
+	</desc>
+	&DOM_Implementation;
+	&DOM_Document;
+	&DOM_Node;
+	&DOM_Element;
+	&DOM_NamedNodeMap;
+	&DOM_NodeList;
+	&DOM_CharacterData;
+	&DOM_Text;
+</library>
+

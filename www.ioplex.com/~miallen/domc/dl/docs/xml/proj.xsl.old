@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+
+<!--
+proj.xsl - XSLT style-sheet for generating a project web page
+Copyright (C) 2002 Michael B. Allen
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+
+<xsl:stylesheet version="1.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:xt="http://www.jclark.com/xt"
+	extension-element-prefixes="xt">
+<xsl:output method="html"
+	encoding="ISO-8859-1"
+	doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"/>
+<xsl:param name="section"/>
+<xsl:param name="date"/>
+<xsl:param name="lib"/>
+<xsl:param name="title"/>
+<xsl:param name="color"/>
+
+<xsl:template match="proj">
+	<HTML><HEAD>
+	<STYLE TYPE="text/css">
+		BODY {
+			background-color: f5f5f5;
+		}
+		H1, H2, H3, .tfc {
+			color: <xsl:value-of select="$color"/>;
+		}
+		A {
+			color: <xsl:value-of select="$color"/>;
+			font-weight: bold;
+		}
+		BIG {
+			color: <xsl:value-of select="$color"/>;
+			font-weight: bold;
+			font-size: 40px;
+		}
+		EM {
+			color: <xsl:value-of select="$color"/>;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		PRE { 
+		    font-family: monospace;
+		    border: 1px solid black;
+		    white-space: pre; 
+		    color: black;
+		    background-color: #dfdfdf; 
+		}
+		TABLE {
+			border-collapse: collapse;
+		}
+		TH, TD {
+		}
+	</STYLE>
+	<TITLE><xsl:value-of select="title"/></TITLE>
+	</HEAD><BODY>
+	<BIG><xsl:value-of select="title"/></BIG><BR/>
+	<xsl:copy-of select="short"/>
+	<P>
+		<xsl:copy-of select="desc"/>
+	</P>
+	<table><tr><td valign="top" width="250">
+		<xsl:apply-templates select="links"/>
+	</td><td valign="top">
+		<xsl:apply-templates select="news"/>
+	</td></tr></table>
+	<hr noshade="noshade"/>
+	<xsl:value-of select="$date"/><BR/>
+	<xsl:value-of select="$lib"/>
+	</BODY></HTML>
+</xsl:template>
+
+<xsl:template match="links">
+	<h2>Links</h2>
+	<xsl:for-each select="a">
+		<xsl:copy-of select="."/><br/>
+	</xsl:for-each>
+	<xsl:for-each select="group">
+		<br/>
+		<b><xsl:value-of select="title"/></b><br/>
+		<xsl:for-each select="a">
+			<xsl:copy-of select="."/><br/>
+		</xsl:for-each>
+	</xsl:for-each>
+</xsl:template>
+
+<xsl:template match="news">
+	<h2>News</h2>
+	<xsl:for-each select="entry">
+		<EM><xsl:apply-templates select="title"/></EM><BR/>
+		<SMALL><xsl:value-of select="sub"/></SMALL><BR/>
+		<xsl:copy-of select="desc"/><BR/>
+		<P/>
+	</xsl:for-each>
+</xsl:template>
+
+<xsl:template match="br|p|a|i|tt|pre|li|ul">
+	<xsl:copy-of select="."/>
+</xsl:template>
+
+</xsl:stylesheet>
+

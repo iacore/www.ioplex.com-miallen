@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE dflt [
+   <!ATTLIST foo attr CDATA "bar">
+]>
+<dflt>
+	<foo/>
+</dflt>

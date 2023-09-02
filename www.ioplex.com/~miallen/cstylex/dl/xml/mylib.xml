@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE library [
+	<!ENTITY foo SYSTEM "foo.xml">
+]>
+
+<library name="mylib">
+	<title>mylib &lt;mylib/*.h&gt;</title>
+	<desc>
+The mylib package is ...
+	</desc>
+	&foo;
+</library>
+

@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<STYLE TYPE="text/css">
+		BODY {
+			background-color: f5f5f5;
+			font-family: verdana, arial; font-size: small;
+		}
+		H2, H3, A, .tfc {
+			color: #000080;
+			font-family: verdana, arial; font-size: small;
+		}
+		PRE { 
+		    font-family: monospace;
+		    border: 1px solid black;
+		    white-space: pre; 
+		    color: black;
+		    background-color: #dfdfdf; 
+		}
+		TABLE {
+			float: right;
+			border-collapse: collapse;
+			border-top: 1px solid #000000;
+			border-right: 1px solid #000000;
+		}
+		TH, TD {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+			border-bottom: 1px solid #000000;
+			border-left: 1px solid #000000;
+		}
+	</STYLE>
+<title>DOMC &lt;domc.h&gt;</title>
+</head>
+<body bgcolor="#f5f5f5">
+<h1>DOMC &lt;domc.h&gt;</h1>
+ DOMC is a light weight C implementation of the DOM as specified in the W3C Document Object Model Level 1, Level 2, and Level 2 Events recommendations. The DOM is a popular API for manipulating XML and HTML documents as a tree of nodes in memory. It is the more sophisticated but more memory constraining alternative to the SAX API.
+<p>
+</p>
+<i>This implementation is not W3C compliant</i> because it lacks support for namespace functionality, entity references, DOCTYPE nodes, DTD default attribute values, and other peripheral functionality. The DOM_Node type and it's associated operations should work well however because what functionality is supported has been tested thoroughly.
+<p>
+</p>
+The definitive information on the DOM is the collection of W3C recommendations which can be found at the below locations:
+<ul>
+<li>
+<a href="http://www.w3.org/DOM/DOMTR" target="_top">http://www.w3.org/DOM/DOMTR</a>
+</li>
+<li>
+<a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html" target="_top">http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html</a>
+</li>
+<li>
+<a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113/events.html" target="_top">http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113/events.html</a>
+</li>
+</ul>
+	<H2>DOM_Implementation</H2>
+This <tt>DOM_Implementation</tt> interface provides functions for testing the functionality of a DOM implementation as well as creating <tt>DOM_Document</tt> and <tt>DOM_DocumentType</tt> nodes.
+<H2>DOM_Document</H2>
+A <tt>DOM_Document</tt> represents an entire XML document and acts as the root of the DOM tree. Because nodes cannot exist outside of the context of a <tt>DOM_Document</tt> this interface provides the factory methods needed to create individual nodes to compose and modify DOM trees. The <tt>ownerDocument</tt> member of a <tt>DOM_Node</tt> points to the document from which it was created (except <tt>DOM_DocumentType</tt> and <tt>DOM_Document</tt> which may have a NULL <tt>ownerDocument</tt> member). This interface also provides the <tt>DOM_Document_getElementsByTagName</tt> function for retriving all elements with a specified name.
+<p>
+</p>
+To build a document from scratch use the expression <tt>DOM_Implementation_createDocument(NULL, NULL, NULL)</tt> to create an empty document and add new nodes using <tt>DOM_Document_createElement</tt>, <tt>DOM_Document_createComment</tt>, etc with <tt>DOM_Node_appendChild</tt>, <tt>DOM_Node_insertBefore</tt> or similar. See the <tt>DOM_Implementation</tt> and <tt>DOM_Node</tt> interface documentation for details.
+<p>
+</p>
+<b>Memory Management</b>
+<p>
+</p>
+The <tt>DOM_DocumentLS_load</tt>, <tt>DOM_DocumentLS_read</tt>, and <tt>DOM_Document_createXxx</tt> functions allocate memory that must at some point be freed with <tt>DOM_Document_destoryNode</tt>.
+The <tt>DOM_Document_destroyNode</tt> function may be used to released nodes of all types such as <tt>DOM_Element</tt>, <tt>DOM_Text</tt>, <tt>DOM_Attr</tt>, <tt>DOM_Document</tt>. All children of a node are freed when the parent is freed.
+An entire document may be free with the expression <tt>DOM_Document_destroyNode(doc, doc)</tt>.
+Beware that freeing a node that is still a decendant of another node will result in a tree with invalid pointers and will cause the program to crash when freed again.
+There are only two other special cases to consider. First, the <tt>DOM_Document_destroyNodeList</tt> function must be called for each <tt>DOM_NodeList</tt> returned by <tt>DOM_Element_getElementsByTagName</tt> and <tt>DOM_Document_getElementsByTagName</tt>. Second, the <tt>DOM_DocumentFragment</tt> node cannot be a child of another node. When added to the tree, it's children are actually moved into the target node leaving an empty <tt>DOM_DocumentFragment</tt>. This empty node must be freed with <tt>DOM_Document_destroyNode</tt> if it will no longer be used. For completeness, the <tt>DOM_DocumentEvent_destroyEvent</tt> function must be called to free <tt>DOM_Event</tt> objects however that non-core API is not yet documented here.
+<H2>DOM_Node</H2>
+
+
+The <tt>DOM_Node</tt> type is the primary datatype of the Document Object Model. Most of the other DOM interfaces inherit this interface. All <tt>DOM_Nodes</tt> have <tt>nodeName</tt>, <tt>nodeValue</tt>, and <tt>nodeType</tt> members. The vaules of these members depends on the node type. For example the <tt>DOM_Element</tt> node has a <tt>nodeValue</tt> corresponding to the tag name and a <tt>NULL</tt> <tt>nodeValue</tt>.
+<p>
+</p>
+Only the <tt>DOM_Element</tt> node type has attributes. All other node types have a <tt>NULL</tt> <tt>attributes</tt> member.
+Child nodes are accessable through the <tt>childNodes</tt> <tt>DOM_NodeList</tt> member and the <tt>firstChild</tt>, <tt>lastChild</tt>, <tt>previousSibling</tt>, and <tt>nextSibling</tt> members. Not all element types have child nodes.
+
+<p>
+</p>
+In DOMC node inheritance is emulated with simple <tt>typedef</tt> statements and a <tt>union</tt> that contains all possible subclass attributes. To access a child interface specific attribute it may be necessary to access it through this union. For example the <tt>systemId</tt> of a notation node is currently only accessible through the <tt>union</tt> like:
+<PRE>
+
+  DOM_String *sysid;
+  ...
+  sysid = node-&gt;u.Notation.systemId;
+  </PRE>
+Care must be taken when modifing these union members (this is not well defined yet). Attributes accessible through the <tt>union</tt> that may need to be modified have helper methods to make this less awkward. The <tt>DOM_Node_setNodeValue</tt> function must be used to set the <tt>nodeValue</tt> member.
+
+
+<p>
+</p>
+The all-important <tt>DOM_Node</tt> structure follows although some fields are left out in the interest of brevity. It may be necessary to look at this structure in the <tt>domc.h</tt> header.
+<PRE>
+
+  struct DOM_Node {
+  	DOM_String *nodeName;
+  	DOM_String *nodeValue;
+  	unsigned short nodeType;
+  	DOM_Node *parentNode;
+  	DOM_NodeList *childNodes;
+  	DOM_Node *firstChild;
+  	DOM_Node *lastChild;
+  	DOM_Node *previousSibling;
+  	DOM_Node *nextSibling;
+  	DOM_NamedNodeMap *attributes;
+  	DOM_Document *ownerDocument;
+  	union {
+  		struct {
+  			DOM_DocumentType *doctype;
+  			DOM_Element *documentElement;
+  			DOM_String *version;
+  			DOM_String *encoding;
+  			int standalone;
+  		} Document;
+  		struct {
+  			DOM_NamedNodeMap *entities;
+  			DOM_NamedNodeMap *notations;
+  			DOM_String *publicId;
+  			DOM_String *systemId;
+  			DOM_String *internalSubset;
+  		} DocumentType;
+  		struct {
+  			int specified;
+  			DOM_Element *ownerElement;
+  		} Attr;
+  		struct {
+  			int length;
+  		} CharacterData;
+  		struct {
+  			DOM_String *publicId;
+  			DOM_String *systemId;
+  		} Notation;
+  		struct {
+  			DOM_String *publicId;
+  			DOM_String *systemId;
+  			DOM_String *notationName;
+  		} Entity;
+  		struct {
+  			DOM_String *target;
+  			DOM_String *data;
+  		} ProcessingInstruction;
+  	} u;
+  };
+  </PRE>
+<H2>DOM_Element</H2>
+The <tt>DOM_Element</tt> interface represents an element in an XML document. The following is a description of each <tt>DOM_Node</tt> member in the context of a <tt>DOM_Element</tt>:
+
+
+<tt>nodeName</tt> This <tt>DOM_String *</tt> corresponds to the tag name of the element. It is read-only and cannot be modified.
+<tt>nodeValue</tt> This is always <tt>NULL</tt>
+<tt>childNodes</tt> This <tt>DOM_NodeList *</tt> contains the child nodes of this element.
+<tt>attributes</tt> This <tt>DOM_NamedNodeMap *</tt> contains the <tt>DOM_Attr</tt> attribute nodes of this element.
+<tt>firstChild</tt> This <tt>DOM_Node *</tt> points to the first child of this element or <tt>NULL</tt> if the element currently has no children.
+<tt>lastChild</tt> This <tt>DOM_Node *</tt> points to the last child of this element or <tt>NULL</tt> if the element currently has no children.
+<tt>previousSibling</tt> This <tt>DOM_Node *</tt> points to the previous node in the <tt>childNodes</tt> list of the parent element of this element.
+<tt>nextSibling</tt> This <tt>DOM_Node *</tt> points to the next node in the <tt>childNodes</tt> list of the parent element of this element.
+
+
+
+
+In addition to the functions provided by the <tt>DOM_Node</tt> interface this interface provides additional functions mainly for manipulating attributes.
+<p>
+</p>
+<i>The DOM specifications require support for entity references which may result in the <tt>childNodes</tt> of an attribute containing a potentially complex subtree of DOM nodes. DOMC currently has very weak support for entity references and as a result attributes will never have children. The default module for loading and storing XML documents uses the Expat XML parser which expands entity references by default. Expat recently added support for parsing external entities but DOMC does not yet use this functionalty.</i>
+<H2>DOM_NamedNodeMap</H2>
+The <tt>DOM_NamedNodeMap</tt> type provides access to an unordered map that premits nodes to be retrieved and set by their <tt>nodeName</tt>. The <tt>attributes</tt> member of a <tt>DOM_Element</tt> node type is a <tt>DOM_NamedNodeMap</tt> as are the <tt>entities</tt> and <tt>notations</tt> members of the <tt>DOM_DocumentType</tt> interface.
+
+
+
+<H2>DOM_NodeList</H2>
+The <tt>DOM_NodeList</tt> type provides access to an ordered collection of nodes. The <tt>childNodes</tt> member of <tt>DOM_Node</tt> is a <tt>DOM_NodeList</tt>. The <tt>getElementsByTagName</tt> functions also return a <tt>DOM_NodeList</tt>.
+<p>
+</p>
+The DOM recommendations specify that these lists are live meaning that modifying the children of a node should be reflected in a list returned by the <tt>getElementsByTagName</tt> functions. <i>Currently DOMC does not update a <tt>DOM_NodeList</tt> returned by the <tt>getElementsByTagName</tt> functions if source nodes are subsequently removed or if a node is added that should be included</i>.
+
+
+<H2>DOM_CharacterData</H2>
+The <tt>DOM_CharacterData</tt> interface provides some basic text manipulation functions for the <tt>DOM_Text</tt>, <tt>DOM_Comment</tt>, and <tt>DOM_CDATASection</tt> nodes. <tt>DOM_CharacterData</tt> nodes cannot be instatiated directly.
+<p>
+</p>
+Currently all of these functions set <tt>DOM_Exception</tt> if an error occurs however there is no return value to detect the error event. A future version of <tt>DOMC</tt> will likely return a value that indicates that an error has occured.
+<p>
+</p>
+<i>DOM specifications require that character data is UTF-16 encoded. DOMC does not support UTF-16. The locale dependant 8 bit encoding is used instead. This permits common <tt>char *</tt> strings to be used in place of <tt>DOM_String *</tt>. Many UNIX and Linux systems support the UTF-8 locale. If a DOMC program is running in a UTF-8 locale the offsets of these string operations refer to characters rather than bytes or individual multibyte sequences. Thus the behavior of these functions should be very similar or identical to that of a DOM implementation that uses UTF-16. Also note that UTF-8 support may be disabled for the sake of installation simplicity. It may be necessary to obtain the source code and rebuild DOMC if i18n support is required.</i>
+<H2>DOM_Text</H2>
+The <tt>DOM_Text</tt> node inherits the structure of the <tt>DOM_CharacterData</tt> interface. It represents the character data between elements (and much less frequently the character data associated with an attribute of an element). The length of the text string may be retrived with the <tt>DOM_CharacterData_getLength</tt> function.
+<hr noshade>
+</body>
+</html>
